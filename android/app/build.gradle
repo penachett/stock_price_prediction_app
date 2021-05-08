@@ -7,12 +7,16 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
     defaultConfig {
         applicationId "com.bmstu.stonksapp"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        resValue "string", "tinkoff_api_key", properties.getProperty("tinkoff.api.key", "")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
