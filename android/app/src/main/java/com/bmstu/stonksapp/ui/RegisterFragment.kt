@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import com.bmstu.stonksapp.R
 
 class RegisterFragment : Fragment() {
@@ -19,6 +21,12 @@ class RegisterFragment : Fragment() {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_register, container, false)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val btn: Button = view.findViewById(R.id.btn)
+        btn.setOnClickListener { findNavController().navigate(R.id.action_to_auth_fragment_from_register) }
     }
 
     companion object {

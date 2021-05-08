@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_predictions"
+        android:icon="@drawable/ic_predictions"
+        android:title="@string/my_predictions"/>
+
+    <item
+        android:id="@+id/navigation_stocks"
+        android:icon="@drawable/ic_stocks_list"
+        android:title="@string/stocks_list"/>
+</menu>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/navigation_auth">
+    <fragment
+        android:id="@+id/navigation_main"
+        android:name="com.bmstu.stonksapp.ui.MainFragment"
+        android:label="Main"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_to_prediction_info_fragment"
+            app:destination="@id/navigation_prediction_info"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+
+        <action
+            android:id="@+id/action_to_stock_info_fragment"
+            app:destination="@id/navigation_stock_info"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+
+        <action
+            android:id="@+id/action_to_auth_fragment"
+            app:destination="@id/navigation_auth"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_auth"
+        android:name="com.bmstu.stonksapp.ui.AuthFragment"
+        android:label="Auth"
+        tools:layout="@layout/fragment_auth">
+
+        <action
+            android:id="@+id/action_to_main_fragment"
+            app:destination="@id/navigation_main"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+        <action
+            android:id="@+id/action_to_register_fragment"
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.bmstu.stonksapp.ui.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_to_auth_fragment_from_register"
+            app:destination="@id/navigation_auth"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_prediction_info"
+        android:name="com.bmstu.stonksapp.ui.PredictionInfoFragment"
+        android:label="PredictionInfo"
+        tools:layout="@layout/fragment_prediction_info"/>
+
+    <fragment
+        android:id="@+id/navigation_stock_info"
+        android:name="com.bmstu.stonksapp.ui.StockInfoFragment"
+        android:label="StockInfo"
+        tools:layout="@layout/fragment_stock_info"/>
+
+</navigation>
