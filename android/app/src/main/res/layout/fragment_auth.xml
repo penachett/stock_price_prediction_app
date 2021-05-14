@@ -114,6 +114,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:maxLines="1"
+                    android:inputType="textPassword"
                     android:theme="@style/EditText"
                     android:fontFamily="@font/mplus_rounded_regular"
                     android:textColor="@color/black"/>

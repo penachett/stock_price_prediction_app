@@ -5,6 +5,7 @@
     <string name="stocks_list">Список акций</string>
     <string name="login">Имя пользователя</string>
     <string name="password">Пароль</string>
+    <string name="password_repeat">Пароль ещё раз</string>
     <string name="authorization">Авторизация</string>
     <string name="authorize">Войти</string>
     <string name="registration">Регистрация</string>
