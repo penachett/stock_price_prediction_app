@@ -34,7 +34,7 @@ class MainFragment : Fragment() {
             childFragmentManager.findFragmentById(R.id.inner_nav_host_fragment) as NavHostFragment?
         if (navHostFragment != null) {
             val navController = navHostFragment.navController
-            navController.addOnDestinationChangedListener { controller: NavController?, destination: NavDestination, arguments: Bundle? ->
+            navController.addOnDestinationChangedListener { _: NavController?, destination: NavDestination, _: Bundle? ->
                 if (destination.id == R.id.navigation_predictions) {
 
                 } else if (destination.id == R.id.navigation_stocks) {

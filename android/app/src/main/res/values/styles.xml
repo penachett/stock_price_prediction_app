@@ -2,6 +2,35 @@
 <resources>
     <style name="bottomNavMenu"
         parent="Widget.Design.BottomNavigationView">
-<!--        <item name="fontFamily">@font/mplus_rounded_regular</item>-->
+        <item name="fontFamily">@font/mplus_rounded_regular</item>
+    </style>
+
+    <style name="FloatingLabelInput" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="EditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/grey_light</item>
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="android:textColorHint">@color/primary</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/main_black</item>
+        <item name="android:textColor">@color/main_black</item>
+        <item name="android:textAppearanceSmall">@style/DialogFonts</item>
+        <item name="android:textAppearanceMedium">@style/DialogFonts</item>
+        <item name="android:textAppearanceLarge">@style/DialogFonts</item>
+    </style>
+
+    <style name="DialogFonts" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/mplus_rounded_regular</item>
+    </style>
+
+    <style name="ProgressDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/main_black</item>
+        <item name="android:progress">@color/main_black</item>
     </style>
 </resources>

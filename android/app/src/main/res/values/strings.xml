@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">StonksApp</string>
+    <string name="app_name">Stonks App</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_predictions">Мои прогнозы</string>
     <string name="stocks_list">Список акций</string>
+    <string name="login">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="authorization">Авторизация</string>
+    <string name="authorize">Войти</string>
+    <string name="registration">Регистрация</string>
+    <string name="register">Зарегистрироваться</string>
 </resources>
