@@ -28,7 +28,9 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val registerBtn: Button = view.findViewById(R.id.register_btn)
         val toAuthTv: TextView = view.findViewById(R.id.to_auth_tv)
-        toAuthTv.setOnClickListener { findNavController().navigate(R.id.action_to_auth_fragment_from_register) }
+        toAuthTv.setOnClickListener {
+            findNavController().navigate(R.id.action_to_auth_fragment_from_register)
+        }
     }
 
     companion object {
