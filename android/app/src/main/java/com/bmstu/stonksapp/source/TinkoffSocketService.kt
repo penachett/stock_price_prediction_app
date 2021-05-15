@@ -72,8 +72,8 @@ class TinkoffSocketService(private val scope: CoroutineScope, private val token:
     companion object {
         private const val TAG = "Tinkoff Source"
         private const val SOCKET_URL = "wss://api-invest.tinkoff.ru/openapi/md/v1/md-openapi/ws"
-        private const val AUTH_HEADER_NAME = "Authorization"
-        private const val AUTH_HEADER_PREFIX = "Bearer"
+        const val AUTH_HEADER_NAME = "Authorization"
+        const val AUTH_HEADER_PREFIX = "Bearer"
 //        private const val SOCKET_URL = "wss://echo.websocket.org"
 //        private const val SOCKET_URL = "wss://dev.whitecabs.ru/base/v2/connect"
         private const val RECONNECT_INTERVAL_MS = 1000L
