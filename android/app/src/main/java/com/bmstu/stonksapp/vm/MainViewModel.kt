@@ -54,7 +54,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getRegisterResponses() = tinkoffDataBundle?.registerResponses
+    fun getTinkoffRegisterResponses() = tinkoffDataBundle?.registerResponses
 
     fun getOrderBookResponses() = tinkoffDataBundle?.orderBookResponses
 

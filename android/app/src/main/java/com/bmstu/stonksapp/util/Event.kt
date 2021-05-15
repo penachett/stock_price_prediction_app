@@ -2,14 +2,14 @@ package com.bmstu.stonksapp.util
 
 open class Event<out T>(private val content: T) {
 
-    var hasBeenHandled = false
+    var isWatched = false
         private set
 
     fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
+        return if (isWatched) {
             null
         } else {
-            hasBeenHandled = true
+            isWatched = true
             content
         }
     }

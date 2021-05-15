@@ -1,6 +1,7 @@
 package com.bmstu.stonksapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bmstu.stonksapp.R
+import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.ui.dialogs.DefaultDialog
+import com.bmstu.stonksapp.ui.dialogs.DefaultDialog.Companion.DIALOG_TEXT_KEY
 import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
+import com.bmstu.stonksapp.util.DialogsWorker
 import com.bmstu.stonksapp.vm.MainViewModel
 
 class AuthFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +43,25 @@ class AuthFragment : Fragment() {
             findNavController().navigate(R.id.action_to_register_fragment)
         }
         btnMain.setOnClickListener {
-            ProgressDialog().show(childFragmentManager, TAG)
-//            findNavController().navigate(R.id.action_to_main_fragment)
+            progressDialog = ProgressDialog()
+            progressDialog?.show(childFragmentManager, TAG)
+            viewModel.getTinkoffRegisterResponses()?.observe(viewLifecycleOwner, {
+                val response = it.getContentIfNotHandled()
+                response?.let {
+                    progressDialog?.dismiss()
+                    when (response) {
+                        is ResultWrapper.Success -> {
+                            Log.i(TAG, "success  register response: " + response.value)
+                            findNavController().navigate(R.id.action_to_main_fragment)
+                        }
+                        is ResultWrapper.NetworkError -> DialogsWorker.showDefaultDialog(
+                            childFragmentManager, resources.getString(R.string.network_error_message), TAG)
+                        is ResultWrapper.ServerError -> DialogsWorker.showDefaultDialog(
+                            childFragmentManager, resources.getString(R.string.default_error_message), TAG)
+                    }
+                }
+            })
+            viewModel.sendTinkoffRegisterRequest()
         }
     }
 

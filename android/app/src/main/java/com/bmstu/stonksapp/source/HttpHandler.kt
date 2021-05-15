@@ -1,5 +1,6 @@
 package com.bmstu.stonksapp.source
 
+import android.util.Log
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorResponse
 import com.google.gson.Gson
@@ -33,6 +34,7 @@ class HttpHandler {
         private fun parseErrorBody(throwable: HttpException): ErrorResponse? {
             return try {
                 throwable.response()?.errorBody()?.string()?.let {
+                    Log.i("parsing", it)
                     Gson().fromJson(it, ErrorResponse::class.java)
                 }
             } catch (exception: Exception) {

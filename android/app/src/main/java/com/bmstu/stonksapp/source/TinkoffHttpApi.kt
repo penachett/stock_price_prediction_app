@@ -7,7 +7,7 @@ import com.bmstu.stonksapp.model.tinkoff.http.StocksInfoResponse
 import retrofit2.http.*
 
 interface TinkoffHttpApi {
-    @POST("register")
+    @POST("sandbox/register")
     suspend fun register(): RegisterResponse
 
     @GET("market/stocks")
