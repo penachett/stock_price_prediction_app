@@ -10,12 +10,18 @@ import com.bmstu.stonksapp.vm.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val vm: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setStatusBarColor()
-        val vm: MainViewModel by viewModels()
-        vm.openSocket(resources.getString(R.string.tinkoff_api_key))
+        vm.setToken(resources.getString(R.string.tinkoff_api_key))
+    }
+
+    private fun openSocket() {
+        vm.openSocket()
     }
 
     private fun setStatusBarColor() {

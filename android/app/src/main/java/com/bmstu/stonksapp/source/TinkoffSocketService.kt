@@ -5,7 +5,6 @@ import com.bmstu.stonksapp.StonksApp
 import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.WebSocket
 import com.tinder.scarlet.lifecycle.android.AndroidLifecycle.ofApplicationForeground
-import com.tinder.scarlet.messageadapter.gson.GsonMessageAdapter
 import com.tinder.scarlet.retry.LinearBackoffStrategy
 import com.tinder.scarlet.websocket.okhttp.newWebSocketFactory
 import com.tinder.streamadapter.coroutines.CoroutinesStreamAdapterFactory
@@ -16,9 +15,9 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
-class TinkoffSource(private val scope: CoroutineScope, private val token: String) {
+class TinkoffSocketService(private val scope: CoroutineScope, private val token: String) {
 
-    private lateinit var service: TinkoffService
+    private lateinit var service: SocketService
     private lateinit var eventsChannel: ReceiveChannel<WebSocket.Event>
     private lateinit var dataChannel: ReceiveChannel<Any>
 
@@ -39,11 +38,11 @@ class TinkoffSource(private val scope: CoroutineScope, private val token: String
 
         service = Scarlet.Builder()
             .webSocketFactory(builder.build().newWebSocketFactory(SOCKET_URL))
-            .addMessageAdapterFactory(GsonMessageAdapter.Factory())
+//            .addMessageAdapterFactory(GsonMessageAdapter.Factory())
             .addStreamAdapterFactory(CoroutinesStreamAdapterFactory())
             .lifecycle(ofApplicationForeground(StonksApp.getInstance()))
             .backoffStrategy(LinearBackoffStrategy(RECONNECT_INTERVAL_MS))
-            .build().create(TinkoffService::class.java)
+            .build().create(SocketService::class.java)
         eventsChannel = service.observeEvents()
         dataChannel = service.observeDataMessages()
         listenData()
