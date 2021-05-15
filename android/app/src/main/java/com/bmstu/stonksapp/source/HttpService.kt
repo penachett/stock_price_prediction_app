@@ -12,24 +12,22 @@ class HttpService {
 
     companion object {
         private const val BASE_URL = ""
-        private const val TINKOFF_BASE_URL = "https://api-invest.tinkoff.ru/openapi/sandbox"
+        private const val TINKOFF_BASE_URL = "https://api-invest.tinkoff.ru/openapi/sandbox/"
         private const val TIMEOUT_SECONDS = 10L
 
-        fun getTinkoffApi(token: String): TinkoffHttpApi = getRetrofit(token = token)
-            .create(TinkoffHttpApi::class.java)
+        fun getTinkoffApi(token: String): TinkoffHttpApi =
+            getRetrofit(tinkoffService = true, token = token).create(TinkoffHttpApi::class.java)
 
-        fun getStonksApi(): StonksAppApi = getRetrofit(cookiesEnabled = true).create(StonksAppApi::class.java)
+        fun getStonksApi(): StonksAppApi = getRetrofit().create(StonksAppApi::class.java)
 
-        private fun getRetrofit(cookiesEnabled: Boolean = false, token: String? = null): Retrofit {
+        private fun getRetrofit(tinkoffService: Boolean = false, token: String? = null): Retrofit {
 
             val clientBuilder = OkHttpClient().newBuilder()
                 .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
 
-            if (cookiesEnabled) {
-                clientBuilder.cookieJar(SessionCookieJar())
-            } else {
+            if (tinkoffService) {
                 if (token != null) {
                     clientBuilder.addInterceptor(Interceptor { chain: Interceptor.Chain ->
                         chain.proceed(
@@ -41,10 +39,12 @@ class HttpService {
                         )
                     })
                 }
+            } else {
+                clientBuilder.cookieJar(SessionCookieJar())
             }
 
             return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(if (tinkoffService) TINKOFF_BASE_URL else BASE_URL)
                 .client(clientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
