@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bmstu.stonksapp.R
+import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
 import com.bmstu.stonksapp.vm.MainViewModel
 
 class AuthFragment : Fragment() {
@@ -36,7 +37,8 @@ class AuthFragment : Fragment() {
             findNavController().navigate(R.id.action_to_register_fragment)
         }
         btnMain.setOnClickListener {
-            findNavController().navigate(R.id.action_to_main_fragment)
+            ProgressDialog().show(childFragmentManager, TAG)
+//            findNavController().navigate(R.id.action_to_main_fragment)
         }
     }
 
