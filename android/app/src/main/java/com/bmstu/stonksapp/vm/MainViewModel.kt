@@ -3,10 +3,12 @@ package com.bmstu.stonksapp.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
 import com.bmstu.stonksapp.repository.TinkoffRepository
 import com.bmstu.stonksapp.source.HttpService
 import com.bmstu.stonksapp.source.TinkoffSocketService
 import com.bmstu.stonksapp.util.TinkoffLiveDataBundle
+import com.bmstu.stonksapp.util.filterStocks
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -15,6 +17,7 @@ class MainViewModel : ViewModel() {
     private var tinkoffRepository: TinkoffRepository? = null
     private var tinkoffDataBundle: TinkoffLiveDataBundle? = null
     private var token: String? = null //TODO: get token in constructor & make this fields lateinit
+    private var stocksList: List<StockInfo> = ArrayList()
 
     fun setToken(token: String) {
         this.token = token
@@ -61,6 +64,11 @@ class MainViewModel : ViewModel() {
     fun getHistoryResponses() = tinkoffDataBundle?.historyInfoResponses
 
     fun getStockListResponses() = tinkoffDataBundle?.stockListResponses
+
+    fun setStocksList(stocks: List<StockInfo>, availableTickers: List<String>) {
+        stocksList = filterStocks(availableTickers, stocks)
+        Log.i("stocks", "" + stocksList)
+    }
 
     fun openSocket() {
         token?.let {

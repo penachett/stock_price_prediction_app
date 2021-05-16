@@ -76,6 +76,8 @@ class AuthFragment : Fragment() {
                         is ResultWrapper.Success -> {
                             Log.i(TAG, "success  stocks response")
                             stocksLoaded = true
+                            viewModel.setStocksList(response.value.payload.instruments,
+                                    resources.getStringArray(R.array.available_tickers).asList())
                             if (registered) {
                                 progressDialog?.dismiss()
                                 findNavController().navigate(R.id.action_to_main_fragment)
