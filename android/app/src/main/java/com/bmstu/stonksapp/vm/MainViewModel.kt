@@ -50,6 +50,16 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun loadOrderBooks() {
+        orderBooksJob?.cancel()
+        orderBooks = ArrayList()
+        orderBooksJob = viewModelScope.launch {
+            for (stock in stocksList) {
+                sendOrderBookRequest(stock.figi)
+            }
+        }
+    }
+
     private fun sendOrderBookRequest(figi: String) {
         viewModelScope.launch {
             tinkoffRepository?.getOrderBook(figi)?.let {
@@ -74,15 +84,6 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             tinkoffRepository?.getStocksInfo()?.let {
                 tinkoffDataBundle?.onStockListResponse(it)
-            }
-        }
-    }
-
-    fun loadOrderBooks() {
-        orderBooks = ArrayList()
-        orderBooksJob = viewModelScope.launch {
-            for (stock in stocksList) {
-                sendOrderBookRequest(stock.figi)
             }
         }
     }
