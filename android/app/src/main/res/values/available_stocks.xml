@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="available_tickers">
+        <item>AAPL</item>
+        <item>MSFT</item>
+        <item>SBER</item>
+        <item>MTSS</item>
+        <item>MOEX</item>
+        <item>ROSN</item>
+        <item>PFE</item>
+        <item>KO</item>
+        <item>INTC</item>
+        <item>MA</item>
+        <item>IBM</item>
+<!--        <item>V</item>-->
+    </string-array>
+</resources>
