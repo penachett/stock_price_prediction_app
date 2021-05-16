@@ -3,13 +3,20 @@ package com.bmstu.stonksapp.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.model.tinkoff.http.FullStocksInfoResponse
+import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
 import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
 import com.bmstu.stonksapp.repository.TinkoffRepository
 import com.bmstu.stonksapp.source.HttpService
 import com.bmstu.stonksapp.source.TinkoffSocketService
 import com.bmstu.stonksapp.util.TinkoffLiveDataBundle
 import com.bmstu.stonksapp.util.filterStocks
+import com.bmstu.stonksapp.util.mergeStocksInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
 
@@ -17,7 +24,9 @@ class MainViewModel : ViewModel() {
     private var tinkoffRepository: TinkoffRepository? = null
     private var tinkoffDataBundle: TinkoffLiveDataBundle? = null
     private var token: String? = null //TODO: get token in constructor & make this fields lateinit
-    private var stocksList: List<StockInfo> = ArrayList()
+    private var stocksList: ArrayList<StockInfo> = ArrayList()
+    private var orderBooks: ArrayList<OrderBook> = ArrayList()
+    private var orderBooksJob: Job? = null
 
     fun setToken(token: String) {
         this.token = token
@@ -41,10 +50,22 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun sendOrderBookRequest(figi: String) {
+    private fun sendOrderBookRequest(figi: String) {
         viewModelScope.launch {
             tinkoffRepository?.getOrderBook(figi)?.let {
-                tinkoffDataBundle?.onOrderBookResponse(it)
+                when (it) {
+                    is ResultWrapper.Success -> {
+                        addOrderBook(it.value.payload)
+                    }
+                    is ResultWrapper.NetworkError -> {
+                        orderBooksJob?.cancel()
+                        tinkoffDataBundle?.onFullStocksInfoResponse(it)
+                    }
+                    is ResultWrapper.ServerError -> {
+                        orderBooksJob?.cancel()
+                        tinkoffDataBundle?.onFullStocksInfoResponse(it)
+                    }
+                }
             }
         }
     }
@@ -57,17 +78,33 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getTinkoffRegisterResponses() = tinkoffDataBundle?.registerResponses
+    fun loadOrderBooks() {
+        orderBooks = ArrayList()
+        orderBooksJob = viewModelScope.launch {
+            for (stock in stocksList) {
+                sendOrderBookRequest(stock.figi)
+            }
+        }
+    }
 
-    fun getOrderBookResponses() = tinkoffDataBundle?.orderBookResponses
+    fun getTinkoffRegisterResponses() = tinkoffDataBundle?.registerResponses
 
     fun getHistoryResponses() = tinkoffDataBundle?.historyInfoResponses
 
     fun getStockListResponses() = tinkoffDataBundle?.stockListResponses
 
+    fun getStocksFullInfo() = tinkoffDataBundle?.fullStocksInfo
+
     fun setStocksList(stocks: List<StockInfo>, availableTickers: List<String>) {
         stocksList = filterStocks(availableTickers, stocks)
-        Log.i("stocks", "" + stocksList)
+    }
+
+    private fun addOrderBook(orderBook: OrderBook) {
+        orderBooks.add(orderBook)
+        if (orderBooks.size == stocksList.size) {
+            tinkoffDataBundle?.onFullStocksInfoResponse(
+                    ResultWrapper.Success(FullStocksInfoResponse(mergeStocksInfo(stocksList, orderBooks))))
+        }
     }
 
     fun openSocket() {

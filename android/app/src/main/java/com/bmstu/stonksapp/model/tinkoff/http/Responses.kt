@@ -77,3 +77,12 @@ data class OrderBookItem(
     val price: Double,
     val quantity: Int
 )
+
+data class FullStockInfo(
+    val info: StockInfo,
+    val orderBook: OrderBook
+)
+
+data class FullStocksInfoResponse(
+    val info: ArrayList<FullStockInfo>
+)
