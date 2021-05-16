@@ -26,10 +26,9 @@ class StocksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btn: Button = view.findViewById(R.id.btn_stock_info)
-        btn.setOnClickListener {
-            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_stock_info_fragment)
-        }
+//        btn.setOnClickListener {
+//            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_stock_info_fragment)
+//        }
     }
 
     companion object {

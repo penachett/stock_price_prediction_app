@@ -2,8 +2,6 @@ package com.bmstu.stonksapp.util
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
-import com.bmstu.stonksapp.R
-import com.bmstu.stonksapp.ui.AuthFragment
 import com.bmstu.stonksapp.ui.dialogs.DefaultDialog
 
 class DialogsWorker {

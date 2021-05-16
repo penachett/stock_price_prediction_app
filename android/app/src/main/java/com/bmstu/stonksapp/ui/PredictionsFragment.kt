@@ -25,14 +25,9 @@ class PredictionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btnPredictions: Button = view.findViewById(R.id.btn_predictions)
-        btnPredictions.setOnClickListener {
-            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_prediction_info_fragment)
-        }
-        val btnLogout: Button = view.findViewById(R.id.btn_auth)
-        btnLogout.setOnClickListener {
-            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_auth_fragment)
-        }
+//        btnPredictions.setOnClickListener {
+//            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_prediction_info_fragment)
+//        }
     }
 
     companion object {

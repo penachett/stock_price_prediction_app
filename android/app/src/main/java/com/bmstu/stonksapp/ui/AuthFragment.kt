@@ -12,8 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.ResultWrapper
-import com.bmstu.stonksapp.ui.dialogs.DefaultDialog
-import com.bmstu.stonksapp.ui.dialogs.DefaultDialog.Companion.DIALOG_TEXT_KEY
 import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
 import com.bmstu.stonksapp.util.DialogsWorker
 import com.bmstu.stonksapp.vm.MainViewModel
@@ -46,7 +44,7 @@ class AuthFragment : Fragment() {
             progressDialog = ProgressDialog()
             progressDialog?.show(childFragmentManager, TAG)
             viewModel.getTinkoffRegisterResponses()?.observe(viewLifecycleOwner, {
-                val response = it.getContentIfNotHandled()
+                val response = it.getContentIfNotWatched()
                 response?.let {
                     progressDialog?.dismiss()
                     when (response) {

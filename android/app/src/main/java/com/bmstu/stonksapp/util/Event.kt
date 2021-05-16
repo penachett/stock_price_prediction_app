@@ -5,7 +5,7 @@ open class Event<out T>(private val content: T) {
     var isWatched = false
         private set
 
-    fun getContentIfNotHandled(): T? {
+    fun getContentIfNotWatched(): T? {
         return if (isWatched) {
             null
         } else {

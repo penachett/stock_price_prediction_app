@@ -13,4 +13,5 @@
     <string name="please_wait">Пожалуйста, подождите</string>
     <string name="default_error_message">Произошла ошибка. Пожалуйста, проверьте соединение и попробуйте снова</string>
     <string name="network_error_message">Не удалось загрузить данные. Пожалуйста, проверьте соединение и попробуйте снова</string>
+    <string name="no_predictions">Прогнозы отсутствуют</string>
 </resources>

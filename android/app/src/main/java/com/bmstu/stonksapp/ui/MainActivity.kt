@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setStatusBarColor()
+        setStatusBarColor(R.color.black)
         vm.setToken(resources.getString(R.string.tinkoff_api_key))
     }
 
@@ -24,9 +24,9 @@ class MainActivity : AppCompatActivity() {
         vm.openSocket()
     }
 
-    private fun setStatusBarColor() {
+    fun setStatusBarColor(colorResource: Int) {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+        window.statusBarColor = ContextCompat.getColor(this, colorResource)
     }
 
     companion object {
