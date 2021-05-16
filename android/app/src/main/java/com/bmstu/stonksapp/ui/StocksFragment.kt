@@ -1,6 +1,7 @@
 package com.bmstu.stonksapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.FullStockInfo
+import com.bmstu.stonksapp.ui.adapters.StocksAdapter
 import com.bmstu.stonksapp.util.DialogsWorker
 import com.bmstu.stonksapp.vm.MainViewModel
 
@@ -75,8 +77,15 @@ class StocksFragment : Fragment() {
             stocksInfo?.let { stocks ->
                 setLoading(false)
                 val list = view.findViewById<RecyclerView>(R.id.stocks_list)
+                val adapter = StocksAdapter(stocks, requireContext(), this)
+                Log.i(TAG, "item count: " + adapter.itemCount)
+                list.adapter = adapter
             }
         }
+    }
+
+    fun onStockClicked(info: FullStockInfo) {
+
     }
 
     private fun setLoading(isLoading: Boolean) {
