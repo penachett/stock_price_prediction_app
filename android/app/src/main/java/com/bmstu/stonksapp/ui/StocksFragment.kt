@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.ResultWrapper
@@ -38,9 +39,6 @@ class StocksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getOrLoadStocksInfo()
-//        btn.setOnClickListener {
-//            parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_stock_info_fragment)
-//        }
     }
 
     private fun getOrLoadStocksInfo() {
@@ -85,7 +83,7 @@ class StocksFragment : Fragment() {
     }
 
     fun onStockClicked(info: FullStockInfo) {
-
+        parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_stock_info_fragment)
     }
 
     private fun setLoading(isLoading: Boolean) {
