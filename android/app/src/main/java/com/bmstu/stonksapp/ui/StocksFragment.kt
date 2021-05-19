@@ -83,7 +83,10 @@ class StocksFragment : Fragment() {
     }
 
     fun onStockClicked(info: FullStockInfo) {
-        parentFragment?.parentFragment?.findNavController()?.navigate(R.id.action_to_stock_info_fragment)
+        val args = Bundle()
+        args.putParcelable(StockInfoFragment.STOCK_INFO_KEY, info)
+        parentFragment?.parentFragment?.findNavController()
+            ?.navigate(R.id.action_to_stock_info_fragment, args)
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -96,6 +99,6 @@ class StocksFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "Stocks Fragment"
+        private const val TAG = "Stocks Fragment"
     }
 }

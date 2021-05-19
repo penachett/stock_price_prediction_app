@@ -42,7 +42,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun sendHistoryInfoRequest(figi: String, from: String, to: String, interval: String) {
+    fun sendHistoryInfoRequest(figi: String, from: String, to: String, interval: String = "day") {
         viewModelScope.launch {
             tinkoffRepository?.getHistoryInfo(figi, from, to, interval)?.let {
                 tinkoffDataBundle?.onHistoryInfoResponse(it)
@@ -121,6 +121,6 @@ class MainViewModel : ViewModel() {
     }
 
     companion object {
-        const val TAG = "Main ViewModel"
+        private const val TAG = "Main ViewModel"
     }
 }

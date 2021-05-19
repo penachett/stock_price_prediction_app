@@ -1,6 +1,8 @@
 package com.bmstu.stonksapp.model.tinkoff.http
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 data class RegisterResponse(
     val trackingId: String,
@@ -20,9 +22,10 @@ data class HistoryInfoResponse(
 )
 
 data class HistoryInfoResponsePayload(
-    val candles: List<HistoryInfo>
+    val candles: ArrayList<HistoryInfo>
 )
 
+@Parcelize
 data class HistoryInfo(
     val figi: String,
     val interval: String,
@@ -32,7 +35,7 @@ data class HistoryInfo(
     @SerializedName("h") val high: Double,
     @SerializedName("l") val low: Double,
     @SerializedName("v") val volume: Double
-)
+): Parcelable
 
 data class StocksInfoResponse(
     val trackingId: String,
@@ -44,6 +47,7 @@ data class StocksInfoResponsePayload(
     val instruments: List<StockInfo>
 )
 
+@Parcelize
 data class StockInfo(
     val figi: String,
     val ticker: String,
@@ -52,7 +56,7 @@ data class StockInfo(
     val currency: String,
     val name: String,
     val type: String
-)
+): Parcelable
 
 data class OrderBookResponse(
     val trackingId: String,
@@ -60,6 +64,7 @@ data class OrderBookResponse(
     val payload: OrderBook
 )
 
+@Parcelize
 data class OrderBook(
     val figi: String,
     val depth: Int,
@@ -71,17 +76,19 @@ data class OrderBook(
     val limitDown: Double,
     val bids: List<OrderBookItem>,
     val asks: List<OrderBookItem>,
-)
+): Parcelable
 
+@Parcelize
 data class OrderBookItem(
     val price: Double,
     val quantity: Int
-)
+): Parcelable
 
+@Parcelize
 data class FullStockInfo(
     val info: StockInfo,
     val orderBook: OrderBook
-)
+): Parcelable
 
 data class FullStocksInfoResponse(
     val info: ArrayList<FullStockInfo>

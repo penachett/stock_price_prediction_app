@@ -8,5 +8,5 @@ data class ErrorResponse(
 
 data class ErrorPayload(
     val message: String,
-    val code: Int
+    val code: String
 )
