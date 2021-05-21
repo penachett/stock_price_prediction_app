@@ -14,15 +14,15 @@ type user struct {
 }
 
 type prediction struct {
-	Id int `json:"id"`
-	Ticker string `json:"ticker"`
-	CreateTime string `json:"create_time"`
-	PredictTime string `json:"predict_time"`
+	Id             int    `json:"id"`
+	Ticker         string `json:"ticker"`
+	CreateTime     int64  `json:"create_time"`
+	PredictTime    int64  `json:"predict_time"`
 	PredictedPrice string `json:"predicted_price"`
-	UserId string `json:"user_id"`
+	UserId         string `json:"user_id"`
 }
 
 type infoForPrediction struct {
-	Ticker string `json:"ticker"`
-	ClosePrices []int `json:"close_prices"`
+	Ticker      string `json:"ticker"`
+	ClosePrices []int  `json:"close_prices"`
 }
