@@ -110,3 +110,32 @@ func loginUser(login string, password string) (string, error) {
 	}
 	return token, nil
 }
+
+func getPredictions(userId int) ([]prediction, error) {
+	res := make([]prediction, 0)
+	queryStr := "select * from predictions where user_id = $1"
+	rows, err := db.Query(queryStr, userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return res, nil
+		} else {
+			fmt.Println("select tests: ", err.Error())
+			return nil, err
+		}
+	}
+	defer rows.Close()
+	var prediction prediction
+	for rows.Next() {
+		err := rows.Scan(&prediction.Id, &prediction.Ticker, &prediction.CreateTime, &prediction.PredictTime, &prediction.PredictedPrice)
+		if err != nil {
+			fmt.Println("select predictions loop: ", err.Error())
+			return nil, err
+		}
+		res = append(res, prediction)
+	}
+	if err = rows.Err(); err != nil {
+		fmt.Println("select predictions final: ", err.Error())
+		return nil, err
+	}
+	return res, nil
+}

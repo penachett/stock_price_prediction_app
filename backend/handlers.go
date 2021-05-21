@@ -32,7 +32,7 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session",
+		Name:    AUTH_COOKIE_NAME,
 		Value:   token,
 		Expires: time.Now().Add(time.Hour * COOKIE_LIFE_DAYS * 24)})
 	w.Header().Set("Content-Type", "application/json")
@@ -70,7 +70,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("generated token: " + token)
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session",
+		Name:    AUTH_COOKIE_NAME,
 		Value:   token,
 		Expires: time.Now().Add(time.Hour * COOKIE_LIFE_DAYS * 24)})
 	send, err := json.Marshal(success{Success: true})
@@ -94,5 +94,38 @@ func handleDeletePrediction(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGetPredictions(w http.ResponseWriter, r *http.Request) {
-
+	if r.Method != http.MethodGet {
+		sendError(405, "", w)
+		return
+	}
+	cookie, err := r.Cookie(AUTH_COOKIE_NAME)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			sendError(401, "", w)
+			return
+		}
+		sendError(400, err.Error(), w)
+		return
+	}
+	user, authorized, err := checkAuth(cookie.Value)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	if !authorized {
+		sendError(401, "", w)
+		return
+	}
+	predictions, err := getPredictions(user.Id)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	send, err := json.Marshal(predictions)
+	if err != nil {
+		sendError(500, "error marshalling "+err.Error(), w)
+		return
+	}
+	writeBytes(w, &send, 200)
 }

@@ -2,6 +2,7 @@ package main
 
 const (
 	COOKIE_LIFE_DAYS         = 60
+	AUTH_COOKIE_NAME         = "session"
 	ALPHABET                 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 	TOKEN_LEN                = 32
 	ERR_USER_ALREADY_EXIST   = "user already exist"
