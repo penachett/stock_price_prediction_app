@@ -169,3 +169,15 @@ func deletePrediction(userId, predictionId int64) error {
 	}
 	return nil
 }
+
+func savePrediction(prediction *prediction) (int64, error) {
+	res := db.QueryRow("insert into predictions values(default, $1, $2, $3, $4, $5) returning id",
+		prediction.Ticker, prediction.CreateTime, prediction.PredictTime, prediction.PredictedPrice, prediction.UserId)
+	var predictionId int64
+	err := res.Scan(&predictionId)
+	if err != nil {
+		fmt.Println("Scan last id save prediction: ", err.Error())
+		return 0, err
+	}
+	return predictionId, err
+}

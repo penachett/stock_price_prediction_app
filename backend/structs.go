@@ -14,7 +14,7 @@ type user struct {
 }
 
 type prediction struct {
-	Id             int     `json:"id"`
+	Id             int64   `json:"id"`
 	Ticker         string  `json:"ticker"`
 	CreateTime     int64   `json:"create_time"`
 	PredictTime    int64   `json:"predict_time"`

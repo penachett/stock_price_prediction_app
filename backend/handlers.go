@@ -146,7 +146,74 @@ func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
-
+	if r.Method != http.MethodPost {
+		sendError(405, "", w)
+		return
+	}
+	cookie, err := r.Cookie(AUTH_COOKIE_NAME)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			sendError(401, "", w)
+			return
+		}
+		sendError(400, err.Error(), w)
+		return
+	}
+	user, authorized, err := checkAuth(cookie.Value)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	if !authorized {
+		sendError(401, "", w)
+		return
+	}
+	ticker := r.PostFormValue("ticker")
+	createTimeStr := r.PostFormValue("create_time")
+	predictTimeStr := r.PostFormValue("predict_time")
+	predictedPriceStr := r.PostFormValue("predicted_price")
+	if createTimeStr == "" || ticker == "" || predictTimeStr == "" || predictedPriceStr == "" {
+		sendError(400, "ticker/create_time/predict_time/predicted_price required", w)
+		return
+	}
+	createTime, err := strconv.ParseInt(createTimeStr, 10, 64)
+	if err != nil {
+		sendError(400, "wrong create_time", w)
+		return
+	}
+	predictTime, err := strconv.ParseInt(predictTimeStr, 10, 64)
+	if err != nil {
+		sendError(400, "wrong predict_time", w)
+		return
+	}
+	predictedPrice, err := strconv.ParseFloat(predictedPriceStr, 10)
+	if err != nil {
+		sendError(400, "wrong predicted_price", w)
+		return
+	}
+	if createTime <= predictTime {
+		sendError(400, "create_time bigger than predict_time", w)
+		return
+	}
+	prediction := new(prediction)
+	prediction.PredictedPrice = predictedPrice
+	prediction.PredictTime = predictTime
+	prediction.CreateTime = createTime
+	prediction.Ticker = ticker
+	prediction.UserId = user.Id
+	predictionId, err := savePrediction(prediction)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	prediction.Id = predictionId
+	w.Header().Set("Content-Type", "application/json")
+	send, err := json.Marshal(prediction)
+	if err != nil {
+		sendError(500, "error marshalling"+err.Error(), w)
+		return
+	}
+	writeBytes(w, &send, 200)
 }
 
 func handleDeletePrediction(w http.ResponseWriter, r *http.Request) {
