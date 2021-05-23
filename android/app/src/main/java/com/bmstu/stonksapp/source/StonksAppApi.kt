@@ -1,5 +1,7 @@
 package com.bmstu.stonksapp.source
 
+import com.bmstu.stonksapp.model.stonks.Prediction
+import com.bmstu.stonksapp.model.stonks.Success
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -13,14 +15,14 @@ interface StonksAppApi {
     suspend fun register(
         @Field("login") login: String,
         @Field("password") password: String
-    ): String
+    ): Success
 
     @FormUrlEncoded
     @POST("api/login")
     fun login(
         @Field("login") login: String,
         @Field("password") password: String
-    ): String
+    ): Success
 
     @FormUrlEncoded
     @POST("api/make_prediction")
@@ -28,7 +30,7 @@ interface StonksAppApi {
         @Field("prices") prices: List<Double>,
         @Field("ticker") ticker: String,
         @Field("predict_days") days: Int
-    ): String
+    ): Prediction
 
     @FormUrlEncoded
     @POST("api/save_prediction")
@@ -38,14 +40,14 @@ interface StonksAppApi {
         @Field("predict_time") predictTime: Long,
         @Field("predicted_price") predictedPrice: Double,
         @Field("start_price") startPrice: Double
-    ): String
+    ): Prediction
 
     @FormUrlEncoded
     @POST("api/delete_prediction")
     fun deletePrediction(
         @Field("prediction_id") id: Long
-    ): String
+    ): Success
 
     @GET("api/get_predictions")
-    fun getPredictions() : String
+    fun getPredictions() : ArrayList<Prediction>
 }
