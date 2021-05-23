@@ -10,19 +10,19 @@ type success struct {
 }
 
 type user struct {
-	Id int `json:"id"`
+	Id int64 `json:"id"`
 }
 
 type prediction struct {
-	Id             int    `json:"id"`
-	Ticker         string `json:"ticker"`
-	CreateTime     int64  `json:"create_time"`
-	PredictTime    int64  `json:"predict_time"`
-	PredictedPrice string `json:"predicted_price"`
-	UserId         string `json:"user_id"`
+	Id             int     `json:"id"`
+	Ticker         string  `json:"ticker"`
+	CreateTime     int64   `json:"create_time"`
+	PredictTime    int64   `json:"predict_time"`
+	PredictedPrice float64 `json:"predicted_price"`
+	UserId         int64   `json:"user_id"`
 }
 
 type infoForPrediction struct {
-	Ticker      string `json:"ticker"`
-	ClosePrices []int  `json:"close_prices"`
+	Ticker      string    `json:"ticker"`
+	ClosePrices []float64 `json:"close_prices"`
 }

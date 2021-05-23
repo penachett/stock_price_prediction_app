@@ -111,7 +111,7 @@ func loginUser(login string, password string) (string, error) {
 	return token, nil
 }
 
-func getPredictions(userId int) ([]prediction, error) {
+func getPredictions(userId int64) ([]prediction, error) {
 	res := make([]prediction, 0)
 	queryStr := "select * from predictions where user_id = $1"
 	rows, err := db.Query(queryStr, userId)
@@ -138,4 +138,34 @@ func getPredictions(userId int) ([]prediction, error) {
 		return nil, err
 	}
 	return res, nil
+}
+
+func checkUserPredictionAccess(userId, predictionId int64) (bool, error) {
+	row := db.QueryRow("select user_id from predcitions where id = $1", predictionId)
+	var ownerId int64
+	err := row.Scan(&ownerId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		}
+		fmt.Println("check user prediction access: " + err.Error())
+		return false, err
+	} else {
+		return userId == ownerId, nil
+	}
+}
+
+func deletePrediction(userId, predictionId int64) error {
+	hasAccess, err := checkUserPredictionAccess(userId, predictionId)
+	if err != nil {
+		return err
+	}
+	if !hasAccess {
+		return errors.New("no predictions with provided id")
+	}
+	_, err = db.Exec("delete from predictions where id = $1", predictionId)
+	if err != nil {
+		return err
+	}
+	return nil
 }

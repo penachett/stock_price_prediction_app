@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -73,6 +74,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 		Name:    AUTH_COOKIE_NAME,
 		Value:   token,
 		Expires: time.Now().Add(time.Hour * COOKIE_LIFE_DAYS * 24)})
+	w.Header().Set("Content-Type", "application/json")
 	send, err := json.Marshal(success{Success: true})
 	if err != nil {
 		sendError(500, "error marshalling: "+err.Error(), w)
@@ -82,7 +84,65 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
-
+	if r.Method != http.MethodPost {
+		sendError(405, "", w)
+		return
+	}
+	cookie, err := r.Cookie(AUTH_COOKIE_NAME)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			sendError(401, "", w)
+			return
+		}
+		sendError(400, err.Error(), w)
+		return
+	}
+	user, authorized, err := checkAuth(cookie.Value)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	if !authorized {
+		sendError(401, "", w)
+		return
+	}
+	pricesStr := r.PostFormValue("prices")
+	ticker := r.PostFormValue("ticker")
+	predictDaysStr := r.PostFormValue("predict_days")
+	if pricesStr == "" || ticker == "" || predictDaysStr == "" {
+		sendError(400, "prices/ticker/predict_days required", w)
+		return
+	}
+	predictDays, err := strconv.Atoi(predictDaysStr)
+	if err != nil {
+		sendError(400, "incorrect predict_days", w)
+		return
+	}
+	var prices []float64
+	err = json.Unmarshal([]byte(pricesStr), &prices)
+	if err != nil {
+		sendError(400, "wrong prices syntax", w)
+		return
+	}
+	predictedPrice, err := makePrediction(prices, predictDays, ticker)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	prediction := new(prediction)
+	prediction.PredictedPrice = predictedPrice
+	curTime := time.Now()
+	prediction.PredictTime = curTime.Add(time.Hour * 24 * time.Duration(predictDays)).Unix()
+	prediction.CreateTime = curTime.Unix()
+	prediction.Ticker = ticker
+	prediction.UserId = user.Id
+	w.Header().Set("Content-Type", "application/json")
+	send, err := json.Marshal(prediction)
+	if err != nil {
+		sendError(500, "error marshalling"+err.Error(), w)
+		return
+	}
+	writeBytes(w, &send, 200)
 }
 
 func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +150,49 @@ func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleDeletePrediction(w http.ResponseWriter, r *http.Request) {
-
+	if r.Method != http.MethodPost {
+		sendError(405, "", w)
+		return
+	}
+	cookie, err := r.Cookie(AUTH_COOKIE_NAME)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			sendError(401, "", w)
+			return
+		}
+		sendError(400, err.Error(), w)
+		return
+	}
+	user, authorized, err := checkAuth(cookie.Value)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	if !authorized {
+		sendError(401, "", w)
+		return
+	}
+	idStr := r.PostFormValue("prediction_id")
+	if idStr == "" {
+		sendError(400, "prediction_id required", w)
+		return
+	}
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		sendError(400, "wrong prediction_id", w)
+		return
+	}
+	err = deletePrediction(user.Id, id)
+	if err != nil {
+		sendError(500, err.Error(), w)
+		return
+	}
+	send, err := json.Marshal(success{Success: true})
+	if err != nil {
+		sendError(500, "error marshalling "+err.Error(), w)
+		return
+	}
+	writeBytes(w, &send, 200)
 }
 
 func handleGetPredictions(w http.ResponseWriter, r *http.Request) {
