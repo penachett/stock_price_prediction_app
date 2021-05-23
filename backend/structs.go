@@ -19,7 +19,7 @@ type prediction struct {
 	CreateTime     int64   `json:"create_time"`
 	PredictTime    int64   `json:"predict_time"`
 	PredictedPrice float64 `json:"predicted_price"`
-	StartPrice float64 `json:"start_price"`
+	StartPrice     float64 `json:"start_price"`
 	UserId         int64   `json:"user_id"`
 }
 

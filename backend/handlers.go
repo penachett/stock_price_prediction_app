@@ -139,7 +139,7 @@ func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	send, err := json.Marshal(prediction)
 	if err != nil {
-		sendError(500, "error marshalling"+err.Error(), w)
+		sendError(500, "error marshalling "+err.Error(), w)
 		return
 	}
 	writeBytes(w, &send, 200)
@@ -217,7 +217,7 @@ func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	send, err := json.Marshal(prediction)
 	if err != nil {
-		sendError(500, "error marshalling"+err.Error(), w)
+		sendError(500, "error marshalling "+err.Error(), w)
 		return
 	}
 	writeBytes(w, &send, 200)
