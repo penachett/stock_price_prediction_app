@@ -172,8 +172,9 @@ func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
 	createTimeStr := r.PostFormValue("create_time")
 	predictTimeStr := r.PostFormValue("predict_time")
 	predictedPriceStr := r.PostFormValue("predicted_price")
-	if createTimeStr == "" || ticker == "" || predictTimeStr == "" || predictedPriceStr == "" {
-		sendError(400, "ticker/create_time/predict_time/predicted_price required", w)
+	startPriceStr := r.PostFormValue("start_price")
+	if createTimeStr == "" || ticker == "" || predictTimeStr == "" || predictedPriceStr == "" || startPriceStr == "" {
+		sendError(400, "ticker/create_time/predict_time/predicted_price/start_price required", w)
 		return
 	}
 	createTime, err := strconv.ParseInt(createTimeStr, 10, 64)
@@ -191,12 +192,18 @@ func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
 		sendError(400, "wrong predicted_price", w)
 		return
 	}
+	startPrice, err := strconv.ParseFloat(startPriceStr, 10)
+	if err != nil {
+		sendError(400, "wrong start_price", w)
+		return
+	}
 	if createTime <= predictTime {
 		sendError(400, "create_time bigger than predict_time", w)
 		return
 	}
 	prediction := new(prediction)
 	prediction.PredictedPrice = predictedPrice
+	prediction.StartPrice = startPrice
 	prediction.PredictTime = predictTime
 	prediction.CreateTime = createTime
 	prediction.Ticker = ticker

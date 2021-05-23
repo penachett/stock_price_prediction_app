@@ -16,4 +16,5 @@ create table predictions (
     create_time bigint,
     predict_time bigint,
     predicted_price double precision,
+    start_price double precision,
     user_id bigint references users (id));

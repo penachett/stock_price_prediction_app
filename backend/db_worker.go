@@ -126,7 +126,8 @@ func getPredictions(userId int64) ([]prediction, error) {
 	defer rows.Close()
 	var prediction prediction
 	for rows.Next() {
-		err := rows.Scan(&prediction.Id, &prediction.Ticker, &prediction.CreateTime, &prediction.PredictTime, &prediction.PredictedPrice)
+		err := rows.Scan(&prediction.Id, &prediction.Ticker, &prediction.CreateTime, &prediction.PredictTime,
+			&prediction.PredictedPrice, &prediction.StartPrice, &prediction.UserId)
 		if err != nil {
 			fmt.Println("select predictions loop: ", err.Error())
 			return nil, err
@@ -141,7 +142,7 @@ func getPredictions(userId int64) ([]prediction, error) {
 }
 
 func checkUserPredictionAccess(userId, predictionId int64) (bool, error) {
-	row := db.QueryRow("select user_id from predcitions where id = $1", predictionId)
+	row := db.QueryRow("select user_id from predictions where id = $1", predictionId)
 	var ownerId int64
 	err := row.Scan(&ownerId)
 	if err != nil {
@@ -171,8 +172,9 @@ func deletePrediction(userId, predictionId int64) error {
 }
 
 func savePrediction(prediction *prediction) (int64, error) {
-	res := db.QueryRow("insert into predictions values(default, $1, $2, $3, $4, $5) returning id",
-		prediction.Ticker, prediction.CreateTime, prediction.PredictTime, prediction.PredictedPrice, prediction.UserId)
+	res := db.QueryRow("insert into predictions values(default, $1, $2, $3, $4, $5, $6) returning id",
+		prediction.Ticker, prediction.CreateTime, prediction.PredictTime,
+		prediction.PredictedPrice, prediction.StartPrice, prediction.UserId)
 	var predictionId int64
 	err := res.Scan(&predictionId)
 	if err != nil {
