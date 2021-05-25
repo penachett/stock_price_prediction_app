@@ -12,6 +12,10 @@ func main() {
 	http.HandleFunc("/api/save_prediction", handleSavePrediction)
 	http.HandleFunc("/api/delete_prediction", handleDeletePrediction)
 	http.HandleFunc("/api/get_predictions", handleGetPredictions)
+	fmt.Println("initiating db")
+	if err := initDB(); err != nil {
+		panic(err)
+	}
 	fmt.Println("starting server")
 	err := http.ListenAndServe(":9990", nil)
 	if err != nil {

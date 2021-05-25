@@ -5,16 +5,16 @@ grant all privileges on all sequences in schema public to penachett;
 grant all privileges on all functions in schema public to penachett;
 create table users (
     id serial primary key,
-    login text,
-    password text,
+    login text not null,
+    password text not null,
     token text default '',
-    token_expire date);
+    token_expire date not null);
 
 create table predictions (
     id serial primary key,
-    ticker text,
-    create_time bigint,
-    predict_time bigint,
-    predicted_price double precision,
-    start_price double precision,
+    ticker text not null,
+    create_time bigint not null,
+    predict_time bigint not null,
+    predicted_price double precision not null,
+    start_price double precision not null,
     user_id bigint references users (id));
