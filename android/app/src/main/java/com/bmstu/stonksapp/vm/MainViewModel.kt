@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.model.stonks.Prediction
 import com.bmstu.stonksapp.model.tinkoff.http.FullStocksInfoResponse
 import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
 import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
@@ -11,16 +12,16 @@ import com.bmstu.stonksapp.repository.StonksRepository
 import com.bmstu.stonksapp.repository.TinkoffRepository
 import com.bmstu.stonksapp.source.HttpService
 import com.bmstu.stonksapp.source.TinkoffSocketService
+import com.bmstu.stonksapp.util.StonksLiveDataBundle
 import com.bmstu.stonksapp.util.TinkoffLiveDataBundle
 import com.bmstu.stonksapp.util.filterStocks
 import com.bmstu.stonksapp.util.mergeStocksInfo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
 
+    //Tinkoff open api fields
     private lateinit var socketSource: TinkoffSocketService
     private var tinkoffRepository: TinkoffRepository? = null
     private var tinkoffDataBundle: TinkoffLiveDataBundle? = null
@@ -29,13 +30,69 @@ class MainViewModel : ViewModel() {
     private var orderBooks: ArrayList<OrderBook> = ArrayList()
     private var orderBooksJob: Job? = null
 
+    //Stonks api fields
     private val stonksRepository: StonksRepository = StonksRepository(HttpService.getStonksApi())
+    private val stonksDataBundle: StonksLiveDataBundle = StonksLiveDataBundle()
 
     fun setToken(token: String) {
         this.token = token
         tinkoffRepository = TinkoffRepository(HttpService.getTinkoffApi(token))
         tinkoffDataBundle = TinkoffLiveDataBundle()
     }
+
+    fun sendRegisterRequest(login: String, password: String) {
+        viewModelScope.launch {
+            stonksRepository.register(login, password).let {
+                stonksDataBundle.onRegisterResponse(it)
+            }
+        }
+    }
+
+    fun sendAuthRequest(login: String, password: String) {
+        viewModelScope.launch {
+            stonksRepository.login(login, password).let {
+                stonksDataBundle.onRegisterResponse(it)
+            }
+        }
+    }
+
+    fun sendPredictionsRequest() {
+        viewModelScope.launch {
+            stonksRepository.getPredictions().let {
+                stonksDataBundle.onPredictionsResponse(it)
+            }
+        }
+    }
+
+    fun sendMakePredictionRequest(ticker: String, prices: List<Double>, days: Int) {
+        viewModelScope.launch {
+            stonksRepository.makePrediction(ticker, prices, days).let {
+                stonksDataBundle.onMakePredictionResponse(it)
+            }
+        }
+    }
+
+    fun sendSavePredictionRequest(prediction: Prediction) {
+        viewModelScope.launch {
+            stonksRepository.savePrediction(
+                    prediction.ticker,
+                    prediction.createTime,
+                    prediction.predictTime,
+                    prediction.predictedPrice,
+                    prediction.startPrice).let {
+                stonksDataBundle.onSavePredictionResponse(it)
+            }
+        }
+    }
+
+    fun sendDeletePredictionRequest(id: Long) {
+        viewModelScope.launch {
+            stonksRepository.deletePrediction(id).let {
+                stonksDataBundle.onDeletePredictionResponse(it)
+            }
+        }
+    }
+
 
     fun sendTinkoffRegisterRequest() {
         viewModelScope.launch {
