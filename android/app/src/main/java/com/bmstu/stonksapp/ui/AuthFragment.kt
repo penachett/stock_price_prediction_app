@@ -20,7 +20,7 @@ class AuthFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var progressDialog: ProgressDialog? = null
-    private var registered = false
+    private var authorized = false
     private var stocksLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,63 +43,47 @@ class AuthFragment : Fragment() {
             findNavController().navigate(R.id.action_to_register_fragment)
         }
         btnMain.setOnClickListener {
-            progressDialog = ProgressDialog()
-            progressDialog?.show(childFragmentManager, TAG)
-            viewModel.getTinkoffRegisterResponses()?.observe(viewLifecycleOwner, {
-                val response = it.getContentIfNotWatched()
-                response?.let {
-                    when (response) {
-                        is ResultWrapper.Success -> {
-                            Log.i(TAG, "success  register response: " + response.value)
-                            registered = true
-                            if (stocksLoaded) {
-                                findNavController().navigate(R.id.action_to_main_fragment)
-                            }
-                        }
-                        is ResultWrapper.NetworkError -> {
-                            progressDialog?.dismiss()
-                            DialogsWorker.showDefaultDialog(
-                                    childFragmentManager, resources.getString(R.string.network_error_message), TAG)
-                        }
-                        is ResultWrapper.ServerError -> {
-                            progressDialog?.dismiss()
-                            DialogsWorker.showDefaultDialog(
-                                    childFragmentManager, resources.getString(R.string.default_error_message), TAG)
-                        }
-                    }
-                }
-            })
-            viewModel.getStockListResponses()?.observe(viewLifecycleOwner, {
-                val response = it.peekContent()
-                response.let {
-                    when (response) {
-                        is ResultWrapper.Success -> {
-                            Log.i(TAG, "success  stocks response")
-                            stocksLoaded = true
-                            viewModel.setStocksList(response.value.payload.instruments,
-                                    resources.getStringArray(R.array.available_tickers).asList())
-                            viewModel.loadOrderBooks()
-                            if (registered) {
-                                progressDialog?.dismiss()
-                                findNavController().navigate(R.id.action_to_main_fragment)
-                            }
-                        }
-                        is ResultWrapper.NetworkError -> {
-                            progressDialog?.dismiss()
-                            DialogsWorker.showDefaultDialog(
-                                    childFragmentManager, resources.getString(R.string.network_error_message), TAG)
-                        }
-                        is ResultWrapper.ServerError -> {
-                            progressDialog?.dismiss()
-                            DialogsWorker.showDefaultDialog(
-                                    childFragmentManager, resources.getString(R.string.default_error_message), TAG)
-                        }
-                    }
-                }
-            })
-            viewModel.sendTinkoffRegisterRequest()
-            viewModel.sendStockListRequest()
+            auth()
         }
+    }
+
+    private fun auth() {
+        progressDialog = ProgressDialog()
+        progressDialog?.show(childFragmentManager, TAG)
+        loadStocksList()
+    }
+
+    private fun loadStocksList() {
+        viewModel.getStockListResponses()?.observe(viewLifecycleOwner, {
+            val response = it.peekContent()
+            response.let {
+                when (response) {
+                    is ResultWrapper.Success -> {
+                        Log.i(TAG, "success  stocks response")
+                        stocksLoaded = true
+                        viewModel.setStocksList(response.value.payload.instruments,
+                                resources.getStringArray(R.array.available_tickers).asList())
+                        viewModel.loadOrderBooks()
+                        if (authorized) {
+                            progressDialog?.dismiss()
+                            findNavController().navigate(R.id.action_to_main_fragment)
+                        }
+                    }
+                    is ResultWrapper.NetworkError -> {
+                        progressDialog?.dismiss()
+                        DialogsWorker.showDefaultDialog(
+                                childFragmentManager, resources.getString(R.string.network_error_message), TAG)
+                    }
+                    is ResultWrapper.ServerError -> {
+                        progressDialog?.dismiss()
+                        DialogsWorker.showDefaultDialog(
+                                childFragmentManager, resources.getString(R.string.default_error_message), TAG)
+                    }
+                }
+            }
+        })
+        viewModel.sendTinkoffRegisterRequest()
+        viewModel.sendStockListRequest()
     }
 
     companion object {

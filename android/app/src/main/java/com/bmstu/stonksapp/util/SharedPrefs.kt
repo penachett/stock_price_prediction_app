@@ -28,7 +28,7 @@ class SharedPrefs(context: Context) {
         }
     }
 
-    fun hasPrefs(): Boolean {
+    fun havePrefs(): Boolean {
         return prefs.contains(LOGIN_KEY)
     }
 
