@@ -1,5 +1,6 @@
 package com.bmstu.stonksapp.source
 
+import android.util.Log
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorPayload
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorResponse
@@ -11,11 +12,15 @@ import java.io.IOException
 
 class HttpHandler {
     companion object {
+
+        const val TAG = "Http Handler"
+
         suspend fun <T> apiCall(apiCall: suspend () -> T): ResultWrapper<T> {
             return withContext(Dispatchers.IO) {
                 try {
                     ResultWrapper.Success(apiCall.invoke())
                 } catch (throwable: Throwable) {
+                    Log.e(TAG, "" + throwable.message)
                     when (throwable) {
                         is IOException -> ResultWrapper.NetworkError
                         is HttpException -> {

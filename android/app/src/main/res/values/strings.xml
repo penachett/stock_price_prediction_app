@@ -14,5 +14,8 @@
     <string name="please_wait">Пожалуйста, подождите</string>
     <string name="default_error_message">Произошла ошибка. Пожалуйста, проверьте соединение и попробуйте снова</string>
     <string name="network_error_message">Не удалось загрузить данные. Пожалуйста, проверьте соединение и попробуйте снова</string>
+    <string name="login_too_short">Минимальная длина логина составляет 4 символа</string>
+    <string name="password_too_short">Минимальная длина пароля составляет 8 символов</string>
+    <string name="passwords_not_match">Введённые пароли не совпадают</string>
     <string name="no_predictions">Прогнозы отсутствуют</string>
 </resources>

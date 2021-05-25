@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 class HttpService {
 
     companion object {
-        private const val STONKS_BASE_URL = "http://84.252.141.241:9990/"
+        private const val STONKS_BASE_URL = "http://178.154.193.238:9990/"
         private const val TINKOFF_BASE_URL = "https://api-invest.tinkoff.ru/openapi/sandbox/"
         private const val TIMEOUT_SECONDS = 10L
 

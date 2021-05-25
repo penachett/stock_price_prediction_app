@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bmstu.stonksapp.R
+import com.bmstu.stonksapp.util.SharedPrefs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainFragment : Fragment() {
@@ -33,6 +34,8 @@ class MainFragment : Fragment() {
         fragName = view.findViewById(R.id.main_fragment_name)
         logoutIcon = view.findViewById(R.id.logout_icon)
         logoutIcon.setOnClickListener {
+            val prefs = SharedPrefs(requireActivity())
+            prefs.setAutoAuth(false)
             parentFragment?.findNavController()?.navigate(R.id.action_to_auth_fragment)
         }
         setBottomMenuNavigation(view)

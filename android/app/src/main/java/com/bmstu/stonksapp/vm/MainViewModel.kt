@@ -51,7 +51,7 @@ class MainViewModel : ViewModel() {
     fun sendAuthRequest(login: String, password: String) {
         viewModelScope.launch {
             stonksRepository.login(login, password).let {
-                stonksDataBundle.onRegisterResponse(it)
+                stonksDataBundle.onAuthResponse(it)
             }
         }
     }
@@ -147,6 +147,19 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun getRegisterResponses() = stonksDataBundle.registerResponses
+
+    fun getAuthResponses() = stonksDataBundle.authResponses
+
+    fun getPredictionsResponses() = stonksDataBundle.predictionsResponses
+
+    fun getMakePredictionResponses() = stonksDataBundle.makePredictionResponses
+
+    fun getSavePredictionResponses() = stonksDataBundle.savePredictionResponses
+
+    fun getDeletePredictionResponses() = stonksDataBundle.deletePredictionResponses
+
 
     fun getTinkoffRegisterResponses() = tinkoffDataBundle?.registerResponses
 

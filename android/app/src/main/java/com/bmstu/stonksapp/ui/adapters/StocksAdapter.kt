@@ -46,7 +46,6 @@ class StocksAdapter(private val list: ArrayList<FullStockInfo>, private val cont
         val item  = list[position]
         stockHolder.name.text = item.info.name
         stockHolder.ticker.text = item.info.ticker
-        Log.i(TAG, "" + item.info.currency)
         val priceString = "${item.orderBook.lastPrice} ${currencySymbolByName(item.info.currency)}"
         stockHolder.price.text = priceString
         stockHolder.image.setImageResource(context.resources.getIdentifier(

@@ -28,8 +28,8 @@ class SharedPrefs(context: Context) {
         }
     }
 
-    fun havePrefs(): Boolean {
-        return prefs.contains(LOGIN_KEY)
+    fun isEmpty(): Boolean {
+        return !prefs.contains(LOGIN_KEY)
     }
 
     fun saveAuthData(login: String?, password: String?) {
@@ -39,11 +39,11 @@ class SharedPrefs(context: Context) {
         editor.apply()
     }
 
-    val login: String?
-        get() = prefs.getString(LOGIN_KEY, "")
+    val login: String
+        get() = prefs.getString(LOGIN_KEY, "")!!
 
-    val password: String?
-        get() = prefs.getString(PASSWORD_KEY, "")
+    val password: String
+        get() = prefs.getString(PASSWORD_KEY, "")!!
 
     val isAutoAuthEnabled: Boolean
         get() = prefs.getBoolean(AUTO_AUTH_KEY, false)

@@ -90,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:maxLines="1"
+                    android:inputType="text"
                     android:fontFamily="@font/mplus_rounded_regular"
                     android:theme="@style/EditText"
                     android:textColor="@color/black"/>

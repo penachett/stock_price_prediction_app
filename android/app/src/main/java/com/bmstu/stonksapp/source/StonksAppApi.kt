@@ -19,14 +19,14 @@ interface StonksAppApi {
 
     @FormUrlEncoded
     @POST("api/login")
-    fun login(
+    suspend fun login(
         @Field("login") login: String,
         @Field("password") password: String
     ): Success
 
     @FormUrlEncoded
     @POST("api/make_prediction")
-    fun makePrediction(
+    suspend fun makePrediction(
         @Field("prices") prices: List<Double>,
         @Field("ticker") ticker: String,
         @Field("predict_days") days: Int
@@ -34,7 +34,7 @@ interface StonksAppApi {
 
     @FormUrlEncoded
     @POST("api/save_prediction")
-    fun savePrediction(
+    suspend fun savePrediction(
         @Field("ticker") ticker: String,
         @Field("create_time") createTime: Long,
         @Field("predict_time") predictTime: Long,
@@ -44,10 +44,10 @@ interface StonksAppApi {
 
     @FormUrlEncoded
     @POST("api/delete_prediction")
-    fun deletePrediction(
+    suspend fun deletePrediction(
         @Field("prediction_id") id: Long
     ): Success
 
     @GET("api/get_predictions")
-    fun getPredictions() : ArrayList<Prediction>
+    suspend fun getPredictions() : ArrayList<Prediction>
 }
