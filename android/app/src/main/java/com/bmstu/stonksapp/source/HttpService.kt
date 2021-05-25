@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 class HttpService {
 
     companion object {
-        private const val BASE_URL = ""
+        private const val STONKS_BASE_URL = "http://84.252.141.241:9990/"
         private const val TINKOFF_BASE_URL = "https://api-invest.tinkoff.ru/openapi/sandbox/"
         private const val TIMEOUT_SECONDS = 10L
 
@@ -44,7 +44,7 @@ class HttpService {
             }
 
             return Retrofit.Builder()
-                .baseUrl(if (tinkoffService) TINKOFF_BASE_URL else BASE_URL)
+                .baseUrl(if (tinkoffService) TINKOFF_BASE_URL else STONKS_BASE_URL)
                 .client(clientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -60,7 +60,6 @@ class HttpService {
 
             override fun loadForRequest(url: HttpUrl): List<Cookie> {
                 return if (!url.encodedPath.endsWith("login")
-                    && !url.encodedPath.endsWith("version")
                     && !url.encodedPath.endsWith("register") && cookies != null) {
                     cookies!!
                 } else Collections.emptyList()

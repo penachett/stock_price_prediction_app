@@ -1,7 +1,7 @@
 package com.bmstu.stonksapp.source
 
-import android.util.Log
 import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.model.tinkoff.http.ErrorPayload
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +20,8 @@ class HttpHandler {
                         is IOException -> ResultWrapper.NetworkError
                         is HttpException -> {
                             val code = throwable.code()
-                            val errorResponse = parseErrorBody(throwable)
-                            ResultWrapper.ServerError(code, errorResponse)
+                            val errorMessage = parseErrorBody(throwable)
+                            ResultWrapper.ServerError(code, errorMessage)
                         }
                         else -> {
                             ResultWrapper.ServerError(null, null)
@@ -31,13 +31,19 @@ class HttpHandler {
             }
         }
 
-        private fun parseErrorBody(throwable: HttpException): ErrorResponse? {
+        private fun parseErrorBody(throwable: HttpException): String? {
             return try {
                 throwable.response()?.errorBody()?.string()?.let {
-                    Gson().fromJson(it, ErrorResponse::class.java)
+                    Gson().fromJson(it, ErrorResponse::class.java).payload.message
                 }
             } catch (exception: Exception) {
-                null
+                try {
+                    throwable.response()?.errorBody()?.string()?.let {
+                        Gson().fromJson(it, ErrorPayload::class.java).message
+                    }
+                } catch (e: Exception) {
+                    null
+                }
             }
         }
     }

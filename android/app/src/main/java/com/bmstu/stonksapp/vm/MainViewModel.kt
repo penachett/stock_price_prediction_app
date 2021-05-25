@@ -7,6 +7,7 @@ import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.FullStocksInfoResponse
 import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
 import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
+import com.bmstu.stonksapp.repository.StonksRepository
 import com.bmstu.stonksapp.repository.TinkoffRepository
 import com.bmstu.stonksapp.source.HttpService
 import com.bmstu.stonksapp.source.TinkoffSocketService
@@ -27,6 +28,8 @@ class MainViewModel : ViewModel() {
     private var stocksList: ArrayList<StockInfo> = ArrayList()
     private var orderBooks: ArrayList<OrderBook> = ArrayList()
     private var orderBooksJob: Job? = null
+
+    private val stonksRepository: StonksRepository = StonksRepository(HttpService.getStonksApi())
 
     fun setToken(token: String) {
         this.token = token
