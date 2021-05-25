@@ -7,10 +7,10 @@
     <application
         android:name=".StonksApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/rounded_stonks"
         android:label="@string/app_name"
         android:usesCleartextTraffic="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/rounded_stonks"
         android:supportsRtl="true"
         android:theme="@style/Theme.StonksApp">
         <activity android:name=".ui.MainActivity">
