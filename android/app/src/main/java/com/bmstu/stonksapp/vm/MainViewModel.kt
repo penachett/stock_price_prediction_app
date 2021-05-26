@@ -120,6 +120,21 @@ class MainViewModel : ViewModel() {
     fun sendDeletePredictionRequest(id: Long) {
         viewModelScope.launch {
             stonksRepository.deletePrediction(id).let {
+                if (it is ResultWrapper.Success) {
+                    stonksDataBundle.fullPredictionsInfo.value?.let { predictionsWrapper ->
+                        if (predictionsWrapper is ResultWrapper.Success) {
+                            val predictions = predictionsWrapper.value
+                            for (i in predictions.indices) {
+                                if (predictions[i].prediction.id == id) {
+                                    predictions.removeAt(i)
+                                    break
+                                }
+                            }
+                            stonksDataBundle.onFullPredictionsInfoResponse(
+                                    ResultWrapper.Success(predictions))
+                        }
+                    }
+                }
                 stonksDataBundle.onDeletePredictionResponse(it)
             }
         }
