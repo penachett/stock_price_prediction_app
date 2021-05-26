@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Spinner
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bmstu.stonksapp.R
@@ -54,6 +55,7 @@ class StockInfoFragment : Fragment() {
             setOnClickListener { requireActivity().onBackPressed() }
         }
         observeHistoryInfo()
+        setLoading(true)
         sendHistoryInfoRequest()
         setupPeriodSpinner(view)
     }
@@ -115,7 +117,9 @@ class StockInfoFragment : Fragment() {
     private fun setLoading(loading: Boolean) {
         view?.let {
             val progress = it.findViewById<ProgressBar>(R.id.progress_stock_info)
+            val stockInfoCl = it.findViewById<ConstraintLayout>(R.id.stock_info_cl)
             progress.visibility = if (loading) VISIBLE else GONE
+            stockInfoCl.visibility = if (loading) GONE else VISIBLE
         }
     }
 
