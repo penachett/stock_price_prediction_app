@@ -297,6 +297,7 @@ func handleGetPredictions(w http.ResponseWriter, r *http.Request) {
 		sendError(500, err.Error(), w)
 		return
 	}
+	reverseSlice(predictions)
 	w.Header().Set("Content-Type", "application/json")
 	send, err := json.Marshal(predictions)
 	if err != nil {

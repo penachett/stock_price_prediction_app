@@ -25,3 +25,9 @@ func checkHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
+
+func reverseSlice(a []prediction) {
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+}
