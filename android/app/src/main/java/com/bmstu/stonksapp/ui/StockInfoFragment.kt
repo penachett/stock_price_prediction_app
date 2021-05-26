@@ -2,36 +2,39 @@ package com.bmstu.stonksapp.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Spinner
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bmstu.stonksapp.R
+import com.bmstu.stonksapp.model.PeriodItem
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.FullStockInfo
 import com.bmstu.stonksapp.model.tinkoff.http.HistoryInfo
-import com.bmstu.stonksapp.util.DEFAULT_TIME_ZONE_GMT
-import com.bmstu.stonksapp.util.DialogsWorker
-import com.bmstu.stonksapp.util.calendarToISO8601
-import com.bmstu.stonksapp.util.subYear
+import com.bmstu.stonksapp.ui.adapters.PeriodsSpinnerAdapter
+import com.bmstu.stonksapp.util.*
 import com.bmstu.stonksapp.vm.MainViewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 class StockInfoFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var historyInfo: ArrayList<HistoryInfo>? = null
     private lateinit var info: FullStockInfo
+    private val periods: Array<PeriodItem> = getPredictionPeriods()
+    private var chosenPeriodMonths: Int = periods[0].monthCount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let{ args ->
+        arguments?.let { args ->
             args.getParcelable<FullStockInfo>(STOCK_INFO_KEY)?.let {
                 info = it
             }
@@ -52,6 +55,7 @@ class StockInfoFragment : Fragment() {
         }
         observeHistoryInfo()
         sendHistoryInfoRequest()
+        setupPeriodSpinner(view)
     }
 
     private fun sendHistoryInfoRequest() {
@@ -73,12 +77,12 @@ class StockInfoFragment : Fragment() {
                     is ResultWrapper.NetworkError -> {
                         Log.e(TAG, wrapper.toString())
                         DialogsWorker.showDefaultDialog(childFragmentManager,
-                            resources.getString(R.string.network_error_message), TAG)
+                                resources.getString(R.string.network_error_message), TAG)
                     }
                     is ResultWrapper.ServerError -> {
                         Log.e(TAG, wrapper.toString())
                         DialogsWorker.showDefaultDialog(childFragmentManager,
-                            resources.getString(R.string.default_error_message), TAG)
+                                resources.getString(R.string.default_error_message), TAG)
                     }
                 }
             }
@@ -87,6 +91,25 @@ class StockInfoFragment : Fragment() {
 
     private fun setUI() {
 
+    }
+
+    private fun setupPeriodSpinner(view: View) {
+        val adapter = PeriodsSpinnerAdapter(
+                requireActivity(), R.layout.item_period_spinner,
+                periods)
+        adapter.setDropDownViewResource(R.layout.item_period_spinner)
+        val spinner = view.findViewById<Spinner>(R.id.period_spinner)
+        spinner.adapter = adapter
+        spinner.prompt = "Период"
+        spinner.setSelection(0)
+        spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                chosenPeriodMonths = periods[position].monthCount
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun setLoading(loading: Boolean) {

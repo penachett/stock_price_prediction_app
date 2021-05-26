@@ -8,3 +8,11 @@ fun currencySymbolByName(currency: String): Char {
         else -> ' '
     }
 }
+
+fun monthStringByCount(month: Int): String {
+    return when (month) {
+        1 -> "месяц"
+        2,3,4 -> "месяца"
+        else -> "месяцев"
+    }
+}

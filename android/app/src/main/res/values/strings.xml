@@ -18,4 +18,10 @@
     <string name="password_too_short">Минимальная длина пароля составляет 8 символов</string>
     <string name="passwords_not_match">Введённые пароли не совпадают</string>
     <string name="no_predictions">Прогнозы отсутствуют</string>
+
+    <string name="prediction_period">Прогноз на:</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отменить</string>
+    <string name="predict">Спрогнозировать</string>
+    <string name="predicted_price_for_period">Прогнозируемая цена на %s:</string>
 </resources>
