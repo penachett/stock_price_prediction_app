@@ -32,7 +32,6 @@ class StocksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        getOrLoadStocksInfo()
         return inflater.inflate(R.layout.fragment_stocks, container, false)
     }
 

@@ -1,8 +1,10 @@
 @file:JvmName("StocksWorker")
 package com.bmstu.stonksapp.util
 
+import com.bmstu.stonksapp.model.stonks.Prediction
 import com.bmstu.stonksapp.model.tinkoff.http.FullStockInfo
 import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
+import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
 import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
 
 fun filterStocks(availableTickers: List<String>, allStocks: List<StockInfo>): ArrayList<StockInfo> {
@@ -24,6 +26,19 @@ fun mergeStocksInfo(stocks: ArrayList<StockInfo>, orderBooks: ArrayList<OrderBoo
         for (orderBook in orderBooks) {
             if (orderBook.figi == stock.figi) {
                 res.add(FullStockInfo(stock, orderBook))
+                break
+            }
+        }
+    }
+    return res
+}
+
+fun mergePredictionsWithInfo(predictions: ArrayList<Prediction>, infoList: ArrayList<FullStockInfo>): ArrayList<PredictionWithInfo> {
+    val res = ArrayList<PredictionWithInfo>()
+    for (prediction in predictions) {
+        for (info in infoList) {
+            if (prediction.ticker == info.info.ticker) {
+                res.add(PredictionWithInfo(prediction, info))
                 break
             }
         }

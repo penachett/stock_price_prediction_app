@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.stonks.Prediction
 import com.bmstu.stonksapp.model.stonks.Success
+import com.bmstu.stonksapp.model.tinkoff.http.FullStocksInfoResponse
+import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
 
 class StonksLiveDataBundle {
 
@@ -15,10 +17,6 @@ class StonksLiveDataBundle {
     private val _authResponses: MutableLiveData<Event<ResultWrapper<Success>>> = MutableLiveData()
     val authResponses: LiveData<Event<ResultWrapper<Success>>>
         get() = _authResponses
-
-    private val _predictionsResponses: MutableLiveData<Event<ResultWrapper<ArrayList<Prediction>>>> = MutableLiveData()
-    val predictionsResponses: LiveData<Event<ResultWrapper<ArrayList<Prediction>>>>
-        get() = _predictionsResponses
 
     private val _makePredictionResponses: MutableLiveData<Event<ResultWrapper<Prediction>>> = MutableLiveData()
     val makePredictionResponses: LiveData<Event<ResultWrapper<Prediction>>>
@@ -32,16 +30,16 @@ class StonksLiveDataBundle {
     val deletePredictionResponses: LiveData<Event<ResultWrapper<Success>>>
         get() = _deletePredictionResponses
 
+    private val _fullPredictionsInfo: MutableLiveData<ResultWrapper<ArrayList<PredictionWithInfo>>> = MutableLiveData()
+    val fullPredictionsInfo: LiveData<ResultWrapper<ArrayList<PredictionWithInfo>>>
+        get() = _fullPredictionsInfo
+
     fun onRegisterResponse(response: ResultWrapper<Success>) {
         _registerResponses.value = Event(response)
     }
 
     fun onAuthResponse(response: ResultWrapper<Success>) {
         _authResponses.value = Event(response)
-    }
-
-    fun onPredictionsResponse(response: ResultWrapper<ArrayList<Prediction>>) {
-        _predictionsResponses.value = Event(response)
     }
 
     fun onMakePredictionResponse(response: ResultWrapper<Prediction>) {
@@ -54,5 +52,9 @@ class StonksLiveDataBundle {
 
     fun onDeletePredictionResponse(response: ResultWrapper<Success>) {
         _deletePredictionResponses.value = Event(response)
+    }
+
+    fun onFullPredictionsInfoResponse(info: ResultWrapper<ArrayList<PredictionWithInfo>>) {
+        _fullPredictionsInfo.value = info
     }
 }

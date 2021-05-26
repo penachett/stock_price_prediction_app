@@ -13,10 +13,7 @@ import com.bmstu.stonksapp.repository.StonksRepository
 import com.bmstu.stonksapp.repository.TinkoffRepository
 import com.bmstu.stonksapp.source.HttpService
 import com.bmstu.stonksapp.source.TinkoffSocketService
-import com.bmstu.stonksapp.util.StonksLiveDataBundle
-import com.bmstu.stonksapp.util.TinkoffLiveDataBundle
-import com.bmstu.stonksapp.util.filterStocks
-import com.bmstu.stonksapp.util.mergeStocksInfo
+import com.bmstu.stonksapp.util.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -34,6 +31,7 @@ class MainViewModel : ViewModel() {
     //Stonks api fields
     private val stonksRepository: StonksRepository = StonksRepository(HttpService.getStonksApi())
     private val stonksDataBundle: StonksLiveDataBundle = StonksLiveDataBundle()
+    private var predictions: ArrayList<Prediction>? = null
 
     fun setToken(token: String) {
         this.token = token
@@ -60,7 +58,22 @@ class MainViewModel : ViewModel() {
     fun sendPredictionsRequest() {
         viewModelScope.launch {
             stonksRepository.getPredictions().let {
-                stonksDataBundle.onPredictionsResponse(it)
+                when (it) {
+                    is ResultWrapper.Success -> {
+                        predictions = it.value
+                        val info = getStocksFullInfo()?.value
+                        if (info != null && info is ResultWrapper.Success) {
+                            stonksDataBundle.onFullPredictionsInfoResponse(
+                                    ResultWrapper.Success(mergePredictionsWithInfo(predictions!!, info.value.info)))
+                        }
+                    }
+                    is ResultWrapper.NetworkError -> {
+                        stonksDataBundle.onFullPredictionsInfoResponse(it)
+                    }
+                    is ResultWrapper.ServerError -> {
+                        stonksDataBundle.onFullPredictionsInfoResponse(it)
+                    }
+                }
             }
         }
     }
@@ -153,7 +166,7 @@ class MainViewModel : ViewModel() {
 
     fun getAuthResponses() = stonksDataBundle.authResponses
 
-    fun getPredictionsResponses() = stonksDataBundle.predictionsResponses
+    fun getPredictionsWithInfoResponses() = stonksDataBundle.fullPredictionsInfo
 
     fun getMakePredictionResponses() = stonksDataBundle.makePredictionResponses
 
@@ -177,8 +190,13 @@ class MainViewModel : ViewModel() {
     private fun addOrderBook(orderBook: OrderBook) {
         orderBooks.add(orderBook)
         if (orderBooks.size == stocksList.size) {
+            val fullList = mergeStocksInfo(stocksList, orderBooks)
             tinkoffDataBundle?.onFullStocksInfoResponse(
-                    ResultWrapper.Success(FullStocksInfoResponse(mergeStocksInfo(stocksList, orderBooks))))
+                    ResultWrapper.Success(FullStocksInfoResponse(fullList)))
+            predictions?.let {
+                stonksDataBundle.onFullPredictionsInfoResponse(
+                        ResultWrapper.Success(mergePredictionsWithInfo(predictions!!, fullList)))
+            }
         }
     }
 

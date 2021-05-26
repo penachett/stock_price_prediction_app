@@ -1,6 +1,7 @@
 package com.bmstu.stonksapp.model.tinkoff.http
 
 import android.os.Parcelable
+import com.bmstu.stonksapp.model.stonks.Prediction
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -88,6 +89,12 @@ data class OrderBookItem(
 data class FullStockInfo(
     val info: StockInfo,
     val orderBook: OrderBook
+): Parcelable
+
+@Parcelize
+data class PredictionWithInfo(
+    val prediction: Prediction,
+    val info: FullStockInfo
 ): Parcelable
 
 data class FullStocksInfoResponse(

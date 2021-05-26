@@ -14,14 +14,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.ResultWrapper
-import com.bmstu.stonksapp.model.stonks.Prediction
+import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
+import com.bmstu.stonksapp.ui.adapters.PredictionsAdapter
 import com.bmstu.stonksapp.util.DialogsWorker
 import com.bmstu.stonksapp.vm.MainViewModel
 
 class PredictionsFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private var predictions: ArrayList<Prediction>? = null
+    private var predictions: ArrayList<PredictionWithInfo>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,24 +39,21 @@ class PredictionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         watchPredictionsResponses()
         setLoading(true)
-        val event = viewModel.getPredictionsResponses().value
-        if (event != null) {
+        val list = viewModel.getPredictionsWithInfoResponses().value
+        if (list != null && list is ResultWrapper.Success) {
             Log.i(TAG, "predictions list not null")
-            val response = event.peekContent()
-            if (response is ResultWrapper.Success) {
-                predictions = response.value
-                setUI()
-            }
+            predictions = list.value
+            setUI()
         } else {
             viewModel.sendPredictionsRequest()
         }
     }
 
     private fun watchPredictionsResponses() {
-        viewModel.getPredictionsResponses().observe(viewLifecycleOwner, { event ->
-            when (val response = event.getContentIfNotWatched()) {
+        viewModel.getPredictionsWithInfoResponses().observe(viewLifecycleOwner, { response ->
+            when (response) {
                 is ResultWrapper.Success -> {
-                    Log.i(TAG, "success predictions response")
+                    Log.i(TAG, "success predictions with info response")
                     predictions = response.value
                     setUI()
                 }
@@ -85,6 +83,8 @@ class PredictionsFragment : Fragment() {
                 } else {
                     emptyCl.visibility = GONE
                     list.visibility = VISIBLE
+                    val adapter = PredictionsAdapter(predictions, requireActivity(), this)
+                    list.adapter = adapter
                 }
             }
         }
@@ -97,6 +97,10 @@ class PredictionsFragment : Fragment() {
             progressBar.visibility = if (loading) VISIBLE else GONE
             list.visibility = if (loading) GONE else VISIBLE
         }
+    }
+
+    fun onPredictionClicked(prediction: PredictionWithInfo) {
+
     }
 
     companion object {
