@@ -7,23 +7,24 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.Spinner
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.PeriodItem
 import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.model.stonks.Prediction
 import com.bmstu.stonksapp.model.tinkoff.http.FullStockInfo
 import com.bmstu.stonksapp.model.tinkoff.http.HistoryInfo
 import com.bmstu.stonksapp.ui.adapters.PeriodsSpinnerAdapter
+import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
 import com.bmstu.stonksapp.util.*
 import com.bmstu.stonksapp.vm.MainViewModel
 import java.util.*
+import kotlin.math.abs
 
 class StockInfoFragment : Fragment() {
 
@@ -32,6 +33,8 @@ class StockInfoFragment : Fragment() {
     private lateinit var info: FullStockInfo
     private val periods: Array<PeriodItem> = getPredictionPeriods()
     private var chosenPeriodMonths: Int = periods[0].monthCount
+    private var progressDialog: ProgressDialog? = null
+    private var prediction: Prediction? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +95,81 @@ class StockInfoFragment : Fragment() {
     }
 
     private fun setUI() {
+        historyInfo?.let { history ->
+            view?.findViewById<Button>(R.id.predict_btn)?.apply {
+                setOnClickListener {
+                    observeMakePredictionResponses()
+                    progressDialog?.dismiss()
+                    progressDialog = ProgressDialog()
+                    progressDialog?.show(childFragmentManager, TAG)
+                    val prices = getClosePrices(history)
+                    Log.i(TAG, "prices len: " + prices.size)
+                    viewModel.sendMakePredictionRequest(info.info.ticker,
+                            prices, chosenPeriodMonths * MONTH_LEN)
+                }
+            }
+        }
+    }
 
+    private fun observeMakePredictionResponses() {
+        viewModel.getMakePredictionResponses().observe(viewLifecycleOwner, { event ->
+            event.getContentIfNotWatched()?.let { wrapper ->
+                progressDialog?.dismiss()
+                when (wrapper) {
+                    is ResultWrapper.Success -> {
+                        prediction = wrapper.value
+                        showPredictionInfo()
+                    }
+                    is ResultWrapper.NetworkError -> {
+                        Log.e(TAG, "err make prediction: $wrapper")
+                        DialogsWorker.showDefaultDialog(childFragmentManager,
+                                resources.getString(R.string.network_error_message), TAG)
+                    }
+                    is ResultWrapper.ServerError -> {
+                        Log.e(TAG, "err make prediction: $wrapper")
+                        DialogsWorker.showDefaultDialog(childFragmentManager,
+                                resources.getString(R.string.default_error_message), TAG)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun showPredictionInfo() {
+        view?.let { view ->
+            prediction?.let { prediction ->
+                val predictionCl = view.findViewById<ConstraintLayout>(R.id.prediction_info_cl)
+                val predictBtn = view.findViewById<Button>(R.id.predict_btn)
+                val saveBtn = view.findViewById<Button>(R.id.save_prediction_btn)
+                val closeImage = view.findViewById<ImageView>(R.id.cancel_prediction_ic)
+                val predictionTv = view.findViewById<TextView>(R.id.prediction_tv)
+                val priceTv = view.findViewById<TextView>(R.id.predicted_price_tv)
+                predictionCl.visibility = VISIBLE
+                predictBtn.visibility = GONE
+                saveBtn.setOnClickListener {
+
+                }
+                closeImage.setOnClickListener {
+                    hidePredictionInfo()
+                }
+                predictionTv.text = resources.getString(R.string.predicted_price_for_period,
+                        timestampToDateString(prediction.predictTime))
+                val curPrice = info.orderBook.lastPrice
+                val predictedPrice = prediction.predictedPrice
+                priceTv.text = formPriceChangeString(curPrice, predictedPrice, info.info.currency)
+                priceTv.setTextColor(ContextCompat.getColor(requireActivity(),
+                        if (predictedPrice < curPrice) R.color.red_status else R.color.green_status))
+            }
+        }
+    }
+
+    private fun hidePredictionInfo() {
+        view?.let { view ->
+            val predictionCl = view.findViewById<ConstraintLayout>(R.id.prediction_info_cl)
+            val predictBtn = view.findViewById<Button>(R.id.predict_btn)
+            predictionCl.visibility = GONE
+            predictBtn.visibility = VISIBLE
+        }
     }
 
     private fun setupPeriodSpinner(view: View) {
@@ -107,7 +184,7 @@ class StockInfoFragment : Fragment() {
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 chosenPeriodMonths = periods[position].monthCount
-
+                hidePredictionInfo()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}

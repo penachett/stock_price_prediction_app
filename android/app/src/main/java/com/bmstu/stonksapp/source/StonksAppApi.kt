@@ -27,7 +27,7 @@ interface StonksAppApi {
     @FormUrlEncoded
     @POST("api/make_prediction")
     suspend fun makePrediction(
-        @Field("prices") prices: List<Double>,
+        @Field("prices") prices: String, // json string of prices list
         @Field("ticker") ticker: String,
         @Field("predict_days") days: Int
     ): Prediction

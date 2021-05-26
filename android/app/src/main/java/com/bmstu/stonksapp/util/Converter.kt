@@ -1,5 +1,7 @@
 package com.bmstu.stonksapp.util
 
+import kotlin.math.abs
+
 fun currencySymbolByName(currency: String): Char {
     return when(currency) {
         "RUB" -> '₽'
@@ -16,3 +18,11 @@ fun monthStringByCount(month: Int): String {
         else -> "месяцев"
     }
 }
+
+fun formPriceChangeString(curPrice: Double, predictedPrice: Double, currency: String): String {
+    val priceStr = "$predictedPrice ${currencySymbolByName(currency)}"
+    val diffSign = if (predictedPrice < curPrice) "-" else "+"
+    val diffValue = String.format("%.2f", abs(predictedPrice-curPrice) /curPrice*100)
+    return "$priceStr ($diffSign$diffValue%)"
+}
+//                ↑↓

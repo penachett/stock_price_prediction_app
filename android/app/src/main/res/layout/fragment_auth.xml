@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:textColor="@color/color_link_blue"
+            android:textColor="@color/link_blue"
             android:text="@string/registration"
             android:layout_marginBottom="14dp"
             android:fontFamily="@font/mplus_rounded_regular"

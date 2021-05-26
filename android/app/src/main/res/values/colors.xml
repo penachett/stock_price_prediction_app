@@ -9,5 +9,7 @@
     <color name="main_black">#171717</color>
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
-    <color name="color_link_blue">#006ff9</color>
+    <color name="link_blue">#006ff9</color>
+    <color name="red_status">#db2525</color>
+    <color name="green_status">#3da628</color>
 </resources>

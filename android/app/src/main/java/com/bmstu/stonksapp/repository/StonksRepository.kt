@@ -1,10 +1,12 @@
 package com.bmstu.stonksapp.repository
 
+import android.util.Log
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.stonks.Prediction
 import com.bmstu.stonksapp.model.stonks.Success
 import com.bmstu.stonksapp.source.HttpHandler
 import com.bmstu.stonksapp.source.StonksAppApi
+import com.google.gson.Gson
 
 class StonksRepository(private val service: StonksAppApi) {
 
@@ -21,7 +23,7 @@ class StonksRepository(private val service: StonksAppApi) {
     }
 
     suspend fun makePrediction(ticker: String, prices: List<Double>, predictDays: Int): ResultWrapper<Prediction> {
-        return HttpHandler.apiCall { service.makePrediction(prices, ticker, predictDays) }
+        return HttpHandler.apiCall { service.makePrediction(Gson().toJson(prices), ticker, predictDays) }
     }
 
     suspend fun savePrediction(ticker: String, createTime: Long, predictTime: Long,

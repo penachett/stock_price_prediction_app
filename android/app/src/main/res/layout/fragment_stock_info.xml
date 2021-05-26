@@ -191,11 +191,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:visibility="visible"
-            app:layout_constraintVertical_bias="0.35"
+            android:layout_marginTop="100dp"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stock_info_header_cl"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:indeterminateTint="@color/primary"/>
 

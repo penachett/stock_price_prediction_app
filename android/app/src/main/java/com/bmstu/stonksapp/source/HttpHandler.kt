@@ -2,6 +2,7 @@ package com.bmstu.stonksapp.source
 
 import android.util.Log
 import com.bmstu.stonksapp.model.ResultWrapper
+import com.bmstu.stonksapp.model.stonks.Error
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorPayload
 import com.bmstu.stonksapp.model.tinkoff.http.ErrorResponse
 import com.google.gson.Gson
@@ -37,14 +38,16 @@ class HttpHandler {
         }
 
         private fun parseErrorBody(throwable: HttpException): String? {
+            val errBody = throwable.response()?.errorBody()?.string()
+            Log.i(TAG, "" + errBody)
             return try {
-                throwable.response()?.errorBody()?.string()?.let {
+                errBody?.let {
                     Gson().fromJson(it, ErrorResponse::class.java).payload.message
                 }
             } catch (exception: Exception) {
                 try {
-                    throwable.response()?.errorBody()?.string()?.let {
-                        Gson().fromJson(it, ErrorPayload::class.java).message
+                    errBody?.let {
+                        Gson().fromJson(it, Error::class.java).message
                     }
                 } catch (e: Exception) {
                     null

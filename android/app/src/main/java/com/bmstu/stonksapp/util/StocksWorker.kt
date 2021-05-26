@@ -2,10 +2,7 @@
 package com.bmstu.stonksapp.util
 
 import com.bmstu.stonksapp.model.stonks.Prediction
-import com.bmstu.stonksapp.model.tinkoff.http.FullStockInfo
-import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
-import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
-import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
+import com.bmstu.stonksapp.model.tinkoff.http.*
 
 fun filterStocks(availableTickers: List<String>, allStocks: List<StockInfo>): ArrayList<StockInfo> {
     val res = ArrayList<StockInfo>()
@@ -42,6 +39,14 @@ fun mergePredictionsWithInfo(predictions: ArrayList<Prediction>, infoList: Array
                 break
             }
         }
+    }
+    return res
+}
+
+fun getClosePrices(history: ArrayList<HistoryInfo>): ArrayList<Double> {
+    val res = ArrayList<Double>(history.size)
+    for (day in history.asReversed()) {
+        res.add(day.close)
     }
     return res
 }
