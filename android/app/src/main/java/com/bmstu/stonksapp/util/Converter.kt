@@ -19,10 +19,10 @@ fun monthStringByCount(month: Int): String {
     }
 }
 
-fun formPriceChangeString(curPrice: Double, predictedPrice: Double, currency: String): String {
-    val priceStr = "$predictedPrice ${currencySymbolByName(currency)}"
-    val diffSign = if (predictedPrice < curPrice) "-" else "+"
-    val diffValue = String.format("%.2f", abs(predictedPrice-curPrice) /curPrice*100)
+fun formPriceChangeString(startPrice: Double, endPrice: Double, currency: String): String {
+    val priceStr = "$endPrice ${currencySymbolByName(currency)}"
+    val diffSign = if (endPrice < startPrice) "-" else "+"
+    val diffValue = String.format("%.2f", abs(endPrice-startPrice) /startPrice*100)
     return "$priceStr ($diffSign$diffValue%)"
 }
 //                ↑↓

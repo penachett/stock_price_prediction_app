@@ -25,4 +25,9 @@
     <string name="predict">Спрогнозировать</string>
     <string name="predicted_price_for_period">Прогнозируемая цена на %s:</string>
     <string name="predict_saved">Прогноз успешно сохранён</string>
+
+    <string name="create_date">Дата создания: %s</string>
+    <string name="predicted_price">Прогноз. цена:</string>
+    <string name="current_price">Текущая цена:</string>
+    <string name="prediction_for_date">Прогноз на %s</string>
 </resources>
