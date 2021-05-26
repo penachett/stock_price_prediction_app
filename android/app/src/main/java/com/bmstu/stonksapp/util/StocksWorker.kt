@@ -43,6 +43,15 @@ fun mergePredictionsWithInfo(predictions: ArrayList<Prediction>, infoList: Array
     return res
 }
 
+fun mergePredictionWithInfo(prediction: Prediction, infoList: ArrayList<FullStockInfo>): PredictionWithInfo? {
+    for (info in infoList) {
+        if (prediction.ticker == info.info.ticker) {
+            return PredictionWithInfo(prediction, info)
+        }
+    }
+    return null
+}
+
 fun getClosePrices(history: ArrayList<HistoryInfo>): ArrayList<Double> {
     val res = ArrayList<Double>(history.size)
     for (day in history.asReversed()) {

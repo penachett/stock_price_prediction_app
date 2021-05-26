@@ -15,5 +15,5 @@ data class Prediction(
     @SerializedName("create_time") val createTime: Long,
     @SerializedName("predict_time") val predictTime: Long,
     @SerializedName("predicted_price") val predictedPrice: Double,
-    @SerializedName("start_price") val startPrice: Double
+    @SerializedName("start_price") var startPrice: Double
 ): Parcelable

@@ -102,10 +102,8 @@ class StockInfoFragment : Fragment() {
                     progressDialog?.dismiss()
                     progressDialog = ProgressDialog()
                     progressDialog?.show(childFragmentManager, TAG)
-                    val prices = getClosePrices(history)
-                    Log.i(TAG, "prices len: " + prices.size)
                     viewModel.sendMakePredictionRequest(info.info.ticker,
-                            prices, chosenPeriodMonths * MONTH_LEN)
+                            getClosePrices(history), chosenPeriodMonths * MONTH_LEN)
                 }
             }
         }
@@ -118,6 +116,7 @@ class StockInfoFragment : Fragment() {
                 when (wrapper) {
                     is ResultWrapper.Success -> {
                         prediction = wrapper.value
+                        prediction?.startPrice = info.orderBook.lastPrice
                         showPredictionInfo()
                     }
                     is ResultWrapper.NetworkError -> {
@@ -147,7 +146,11 @@ class StockInfoFragment : Fragment() {
                 predictionCl.visibility = VISIBLE
                 predictBtn.visibility = GONE
                 saveBtn.setOnClickListener {
-
+                    progressDialog?.dismiss()
+                    progressDialog = ProgressDialog()
+                    progressDialog?.show(childFragmentManager, TAG)
+                    observerSavePredictionResponses()
+                    viewModel.sendSavePredictionRequest(prediction)
                 }
                 closeImage.setOnClickListener {
                     hidePredictionInfo()
@@ -161,6 +164,36 @@ class StockInfoFragment : Fragment() {
                         if (predictedPrice < curPrice) R.color.red_status else R.color.green_status))
             }
         }
+    }
+
+    private fun observerSavePredictionResponses() {
+        viewModel.getSavePredictionResponses().observe(viewLifecycleOwner, {event ->
+            event.getContentIfNotWatched()?.let { wrapper ->
+                progressDialog?.dismiss()
+                when (wrapper) {
+                    is ResultWrapper.Success -> {
+                        prediction = wrapper.value
+                        onPredictionSaved()
+                    }
+                    is ResultWrapper.NetworkError -> {
+                        Log.e(TAG, "err save prediction: $wrapper")
+                        DialogsWorker.showDefaultDialog(childFragmentManager,
+                                resources.getString(R.string.network_error_message), TAG)
+                    }
+                    is ResultWrapper.ServerError -> {
+                        Log.e(TAG, "err save prediction: $wrapper")
+                        DialogsWorker.showDefaultDialog(childFragmentManager,
+                                resources.getString(R.string.default_error_message), TAG)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun onPredictionSaved() {
+        hidePredictionInfo()
+        DialogsWorker.showDefaultDialog(childFragmentManager,
+                resources.getString(R.string.predict_saved), TAG)
     }
 
     private fun hidePredictionInfo() {

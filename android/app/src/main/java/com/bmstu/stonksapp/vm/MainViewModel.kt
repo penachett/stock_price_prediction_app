@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.stonks.Prediction
+import com.bmstu.stonksapp.model.stonks.Success
 import com.bmstu.stonksapp.model.tinkoff.http.FullStocksInfoResponse
 import com.bmstu.stonksapp.model.tinkoff.http.OrderBook
 import com.bmstu.stonksapp.model.tinkoff.http.StockInfo
@@ -94,6 +95,23 @@ class MainViewModel : ViewModel() {
                     prediction.predictTime,
                     prediction.predictedPrice,
                     prediction.startPrice).let {
+                if (it is ResultWrapper.Success) {
+                    tinkoffDataBundle?.fullStocksInfo?.value?.let { infoWrapper ->
+                        if (infoWrapper is ResultWrapper.Success) {
+                            val newPredictionWithInfo = mergePredictionWithInfo(it.value, infoWrapper.value.info)
+                            newPredictionWithInfo?.let { prediction ->
+                                stonksDataBundle.fullPredictionsInfo.value?.let { predictionsWrapper ->
+                                    if (predictionsWrapper is ResultWrapper.Success) {
+                                        val predictions = predictionsWrapper.value
+                                        predictions.add(0, prediction)
+                                        stonksDataBundle.onFullPredictionsInfoResponse(
+                                                ResultWrapper.Success(predictions))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 stonksDataBundle.onSavePredictionResponse(it)
             }
         }
