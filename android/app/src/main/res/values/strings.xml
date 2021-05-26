@@ -4,6 +4,7 @@
     <string name="my_predictions">Мои прогнозы</string>
     <string name="stocks_list">Список акций</string>
     <string name="stock_info">Информация об акции</string>
+    <string name="prediction_info">Информация о прогнозе</string>
     <string name="login">Имя пользователя</string>
     <string name="password">Пароль</string>
     <string name="password_repeat">Пароль ещё раз</string>
@@ -30,4 +31,5 @@
     <string name="predicted_price">Прогноз. цена:</string>
     <string name="current_price">Текущая цена:</string>
     <string name="prediction_for_date">Прогноз на %s</string>
+    <string name="delete">Удалить</string>
 </resources>

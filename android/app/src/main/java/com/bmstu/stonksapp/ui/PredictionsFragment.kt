@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bmstu.stonksapp.R
 import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
+import com.bmstu.stonksapp.ui.PredictionInfoFragment.Companion.PREDICTION_INFO_KEY
 import com.bmstu.stonksapp.ui.adapters.PredictionsAdapter
 import com.bmstu.stonksapp.util.DialogsWorker
 import com.bmstu.stonksapp.vm.MainViewModel
@@ -100,7 +102,10 @@ class PredictionsFragment : Fragment() {
     }
 
     fun onPredictionClicked(prediction: PredictionWithInfo) {
-
+        val args = Bundle()
+        args.putParcelable(PREDICTION_INFO_KEY, prediction)
+        parentFragment?.parentFragment?.findNavController()
+                ?.navigate(R.id.action_to_prediction_info_fragment, args)
     }
 
     companion object {

@@ -24,7 +24,6 @@ import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
 import com.bmstu.stonksapp.util.*
 import com.bmstu.stonksapp.vm.MainViewModel
 import java.util.*
-import kotlin.math.abs
 
 class StockInfoFragment : Fragment() {
 
@@ -54,7 +53,7 @@ class StockInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<ImageView>(R.id.order_info_arrow_back).apply {
+        view.findViewById<ImageView>(R.id.stock_info_arrow_back).apply {
             setOnClickListener { requireActivity().onBackPressed() }
         }
         observeHistoryInfo()
