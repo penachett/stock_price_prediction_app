@@ -197,7 +197,7 @@ func handleSavePrediction(w http.ResponseWriter, r *http.Request) {
 		sendError(400, "wrong start_price", w)
 		return
 	}
-	if createTime <= predictTime {
+	if createTime > predictTime {
 		sendError(400, "create_time bigger than predict_time", w)
 		return
 	}
