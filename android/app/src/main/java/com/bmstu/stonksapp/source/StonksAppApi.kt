@@ -29,7 +29,7 @@ interface StonksAppApi {
     suspend fun makePrediction(
         @Field("prices") prices: String, // json string of prices list
         @Field("ticker") ticker: String,
-        @Field("predict_days") days: Int
+        @Field("predict_months") months: Int
     ): Prediction
 
     @FormUrlEncoded

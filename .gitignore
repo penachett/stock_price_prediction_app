@@ -3,4 +3,5 @@
 /res
 /.ipynb_checkpoints
 /examples
+.idea
 server_script.txt

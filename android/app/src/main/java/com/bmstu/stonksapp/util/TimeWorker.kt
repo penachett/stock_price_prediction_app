@@ -38,7 +38,7 @@ fun timestampToDateString(time: Long): String {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = time * 1000
     val day = calendar[Calendar.DAY_OF_MONTH]
-    val month = calendar[Calendar.MONTH]
+    val month = calendar[Calendar.MONTH] + 1
     val year = calendar[Calendar.YEAR]
     val dayStr = if (day < 10) "0$day" else day.toString()
     val monthStr = if (month+1 < 10) "0$month" else month.toString()

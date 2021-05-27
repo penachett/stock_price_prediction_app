@@ -102,7 +102,7 @@ class StockInfoFragment : Fragment() {
                     progressDialog = ProgressDialog()
                     progressDialog?.show(childFragmentManager, TAG)
                     viewModel.sendMakePredictionRequest(info.info.ticker,
-                            getClosePrices(history), chosenPeriodMonths * MONTH_LEN)
+                            getClosePrices(history), chosenPeriodMonths)
                 }
             }
         }

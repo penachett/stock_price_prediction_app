@@ -22,8 +22,8 @@ class StonksRepository(private val service: StonksAppApi) {
         return HttpHandler.apiCall { service.getPredictions() }
     }
 
-    suspend fun makePrediction(ticker: String, prices: List<Double>, predictDays: Int): ResultWrapper<Prediction> {
-        return HttpHandler.apiCall { service.makePrediction(Gson().toJson(prices), ticker, predictDays) }
+    suspend fun makePrediction(ticker: String, prices: List<Double>, months: Int): ResultWrapper<Prediction> {
+        return HttpHandler.apiCall { service.makePrediction(Gson().toJson(prices), ticker, months) }
     }
 
     suspend fun savePrediction(ticker: String, createTime: Long, predictTime: Long,

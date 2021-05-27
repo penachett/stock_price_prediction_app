@@ -79,9 +79,9 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun sendMakePredictionRequest(ticker: String, prices: List<Double>, days: Int) {
+    fun sendMakePredictionRequest(ticker: String, prices: List<Double>, months: Int) {
         viewModelScope.launch {
-            stonksRepository.makePrediction(ticker, prices, days).let {
+            stonksRepository.makePrediction(ticker, prices, months).let {
                 stonksDataBundle.onMakePredictionResponse(it)
             }
         }
