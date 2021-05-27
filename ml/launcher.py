@@ -8,11 +8,13 @@ def write_result(res):
         out.write(str(res))
     print('finished')
 
+MONTH_WORK_DAYS = 21
+
 def call_model(ticker, prices, months):
     if months == 6:
-        prices = prices[-9 * 30:]
+        prices = prices[-9 * MONTH_WORK_DAYS:]
     else:
-        prices = prices[-6 * 30:]
+        prices = prices[-6 * MONTH_WORK_DAYS:]
     model = keras.models.load_model('../ml/compiled_models/' + ticker + "_" + str(months) + 'm.h5')
     input_arr = []
     prices_final = []
