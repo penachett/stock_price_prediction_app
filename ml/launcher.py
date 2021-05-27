@@ -11,10 +11,6 @@ def write_result(res):
 MONTH_WORK_DAYS = 21
 
 def call_model(ticker, prices, months):
-    if months == 6:
-        prices = prices[-9 * MONTH_WORK_DAYS:]
-    else:
-        prices = prices[-6 * MONTH_WORK_DAYS:]
     model = keras.models.load_model('../ml/compiled_models/' + ticker + "_" + str(months) + 'm.h5')
     input_arr = []
     prices_final = []
@@ -22,12 +18,16 @@ def call_model(ticker, prices, months):
         prices_final.append([prices[i]])
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_data = scaler.fit_transform(prices_final)
-    input_arr.append(scaled_data)
+    predictFuture = scaled_data[-6 * MONTH_WORK_DAYS:]
+    predictCurrent = scaled_data[(-6-months) * MONTH_WORK_DAYS : -months * MONTH_WORK_DAYS]
+    input_arr.append(predictCurrent)
+    input_arr.append(predictFuture)
     input_arr = np.array(input_arr)
     input_arr = np.reshape(input_arr, (input_arr.shape[0], input_arr.shape[1], 1))
     closing_price = model.predict(input_arr)
     closing_price = scaler.inverse_transform(closing_price)
-    return closing_price[0][0]
+    diff = closing_price[0][0]-prices[len(prices)-1]
+    return closing_price[1][0]-diff
 
 def read_input():
     reader = open('../ml/input.txt')

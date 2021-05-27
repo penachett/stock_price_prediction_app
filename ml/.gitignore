@@ -2,5 +2,5 @@ data
 input.txt
 output.txt
 /.ipynb_checkpoints
-
+saved_lstm_model.h5
 compiled_models/.ipynb_checkpoints
