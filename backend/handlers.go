@@ -124,7 +124,7 @@ func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
 		sendError(400, "wrong prices syntax", w)
 		return
 	}
-	predictedPrice, err := makePrediction(prices, predictDays, ticker)
+	predictedPrice, err := makePrediction(prices, predictDays/30, ticker)
 	if err != nil {
 		sendError(500, err.Error(), w)
 		return
