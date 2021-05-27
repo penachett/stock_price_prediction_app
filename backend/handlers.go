@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -108,23 +109,27 @@ func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
 	}
 	pricesStr := r.PostFormValue("prices")
 	ticker := r.PostFormValue("ticker")
-	predictDaysStr := r.PostFormValue("predict_days")
-	if pricesStr == "" || ticker == "" || predictDaysStr == "" {
-		sendError(400, "prices/ticker/predict_days required", w)
+	predictMonthsStr := r.PostFormValue("predict_months")
+	if pricesStr == "" || ticker == "" || predictMonthsStr == "" {
+		sendError(400, "prices/ticker/predict_month required", w)
 		return
 	}
-	predictDays, err := strconv.Atoi(predictDaysStr)
+	predictMonths, err := strconv.Atoi(predictMonthsStr)
 	if err != nil {
-		sendError(400, "incorrect predict_days", w)
+		sendError(400, "wrong predict_months", w)
+		return
+	}
+	if predictMonths != 1 && predictMonths != 3 && predictMonths!= 6 {
+		sendError(400, "predict_months can be 1/3/6", w)
 		return
 	}
 	var prices []float64
 	err = json.Unmarshal([]byte(pricesStr), &prices)
 	if err != nil {
-		sendError(400, "wrong prices syntax", w)
+		sendError(400, "wrong prices", w)
 		return
 	}
-	predictedPrice, err := makePrediction(prices, predictDays/30, ticker)
+	predictedPrice, err := makePrediction(prices, predictMonths, strings.ToLower(ticker))
 	if err != nil {
 		sendError(500, err.Error(), w)
 		return
@@ -132,7 +137,7 @@ func handleMakePrediction(w http.ResponseWriter, r *http.Request) {
 	prediction := new(prediction)
 	prediction.PredictedPrice = predictedPrice
 	curTime := time.Now()
-	prediction.PredictTime = curTime.Add(time.Hour * 24 * time.Duration(predictDays)).Unix()
+	prediction.PredictTime = curTime.AddDate(0, predictMonths, 0).Unix()
 	prediction.CreateTime = curTime.Unix()
 	prediction.Ticker = ticker
 	prediction.UserId = user.Id
