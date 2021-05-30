@@ -31,5 +31,6 @@
     <string name="predicted_price">Прогноз. цена:</string>
     <string name="current_price">Текущая цена:</string>
     <string name="prediction_for_date">Прогноз на %s</string>
+    <string name="price_for_date">Цена на %s</string>
     <string name="delete">Удалить</string>
 </resources>

@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bmstu.stonksapp.R
@@ -16,10 +18,7 @@ import com.bmstu.stonksapp.model.ResultWrapper
 import com.bmstu.stonksapp.model.tinkoff.http.HistoryInfo
 import com.bmstu.stonksapp.model.tinkoff.http.PredictionWithInfo
 import com.bmstu.stonksapp.ui.dialogs.ProgressDialog
-import com.bmstu.stonksapp.util.DEFAULT_TIME_ZONE_GMT
-import com.bmstu.stonksapp.util.DialogsWorker
-import com.bmstu.stonksapp.util.calendarToISO8601
-import com.bmstu.stonksapp.util.subYear
+import com.bmstu.stonksapp.util.*
 import com.bmstu.stonksapp.vm.MainViewModel
 import java.util.*
 
@@ -82,6 +81,40 @@ class PredictionInfoFragment : Fragment() {
 
     private fun setUI() {
         view?.let {
+            val stockImage = it.findViewById<ImageView>(R.id.prediction_stock_image)
+            val nameTv = it.findViewById<TextView>(R.id.prediction_stock_name_tv)
+            val predictedInfoTv = it.findViewById<TextView>(R.id.predicted_price_with_date_tv)
+            val startInfoTv = it.findViewById<TextView>(R.id.start_price_with_date_tv)
+            val predictedTv = it.findViewById<TextView>(R.id.predicted_price_tv)
+            val currentTv = it.findViewById<TextView>(R.id.current_price_tv)
+            val startTv = it.findViewById<TextView>(R.id.start_price_tv)
+            val startPrice = prediction.prediction.startPrice
+            val predictedPrice = prediction.prediction.predictedPrice
+            val lastPrice = prediction.info.orderBook.lastPrice
+            val curPriceStr = String.format("%.2f", startPrice) + " ${currencySymbolByName(prediction.info.info.currency)}"
+            startTv.text = curPriceStr
+            predictedInfoTv.text = resources.getString(
+                    R.string.prediction_for_date, timestampToDateString(prediction.prediction.predictTime))
+            startInfoTv.text = resources.getString(
+                    R.string.price_for_date, timestampToDateString(prediction.prediction.createTime))
+            predictedTv.text = formPriceChangeString(
+                    startPrice, predictedPrice, prediction.info.info.currency)
+            currentTv.text = formPriceChangeString(
+                    startPrice, lastPrice, prediction.info.info.currency)
+            if (predictedPrice < startPrice) {
+                predictedTv.setTextColor(ContextCompat.getColor(requireActivity(), R.color.red_status))
+            } else {
+                predictedTv.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_status))
+            }
+            if (lastPrice < startPrice) {
+                currentTv.setTextColor(ContextCompat.getColor(requireActivity(), R.color.red_status))
+            } else {
+                currentTv.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green_status))
+            }
+            stockImage.setImageResource(resources.getIdentifier(
+                    prediction.info.info.ticker.toLowerCase(Locale.ENGLISH), "drawable", requireActivity().packageName))
+            nameTv.text = prediction.info.info.name
+
             it.findViewById<Button>(R.id.delete_btn).setOnClickListener {
                 observeDeleteResponses()
                 progressDialog?.dismiss()

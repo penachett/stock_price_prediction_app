@@ -23,6 +23,6 @@ fun formPriceChangeString(startPrice: Double, endPrice: Double, currency: String
     val priceStr = String.format("%.2f", endPrice) + " ${currencySymbolByName(currency)}"
     val diffSign = if (endPrice < startPrice) "-" else "+"
     val diffValue = String.format("%.2f", abs(endPrice-startPrice) /startPrice*100)
-    return "$priceStr ($diffSign$diffValue%)"
+    return "$priceStr($diffSign$diffValue%)"
 }
 //                ↑↓
