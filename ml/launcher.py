@@ -18,6 +18,8 @@ def call_model(ticker, prices, months):
         prices_final.append([prices[i]])
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled_data = scaler.fit_transform(prices_final)
+    if (months == 6):
+        MONTH_WORK_DAYS = 20
     predictFuture = scaled_data[-6 * MONTH_WORK_DAYS:]
     predictCurrent = scaled_data[(-6-months) * MONTH_WORK_DAYS : -months * MONTH_WORK_DAYS]
     input_arr.append(predictCurrent)
