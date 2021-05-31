@@ -94,15 +94,34 @@ class StockInfoFragment : Fragment() {
     }
 
     private fun setUI() {
-        historyInfo?.let { history ->
-            view?.findViewById<Button>(R.id.predict_btn)?.apply {
-                setOnClickListener {
-                    observeMakePredictionResponses()
-                    progressDialog?.dismiss()
-                    progressDialog = ProgressDialog()
-                    progressDialog?.show(childFragmentManager, TAG)
-                    viewModel.sendMakePredictionRequest(info.info.ticker,
-                            getClosePrices(history), chosenPeriodMonths)
+        view?.let { view ->
+            historyInfo?.let { history ->
+                val stockImage = view.findViewById<ImageView>(R.id.stock_image)
+                val stockNameTv = view.findViewById<TextView>(R.id.stock_name_tv)
+                val currentPriceTv = view.findViewById<TextView>(R.id.current_price_tv)
+                val dayPriceTv = view.findViewById<TextView>(R.id.day_ago_price_tv)
+                val weekPriceTv = view.findViewById<TextView>(R.id.week_ago_price_tv)
+                val monthPriceTv = view.findViewById<TextView>(R.id.month_ago_price_tv)
+                val yearPriceTv = view.findViewById<TextView>(R.id.year_ago_price_tv)
+                stockImage.setImageResource(resources.getIdentifier(
+                        info.info.ticker.toLowerCase(Locale.ENGLISH), "drawable", requireActivity().packageName))
+                stockNameTv.text = info.info.name
+                val currency = info.info.currency
+                currentPriceTv.text = formPriceString(info.orderBook.lastPrice, currency)
+                dayPriceTv.text = formPriceString(history[history.size-1].close, currency)
+                weekPriceTv.text = formPriceString(history[history.size-WORK_WEEK_LEN].close, currency)
+                monthPriceTv.text = formPriceString(history[history.size-WORK_MONTH_LEN].close, currency)
+                yearPriceTv.text = formPriceString(history[0].close, currency)
+
+                view.findViewById<Button>(R.id.predict_btn)?.apply {
+                    setOnClickListener {
+                        observeMakePredictionResponses()
+                        progressDialog?.dismiss()
+                        progressDialog = ProgressDialog()
+                        progressDialog?.show(childFragmentManager, TAG)
+                        viewModel.sendMakePredictionRequest(info.info.ticker,
+                                getClosePrices(history), chosenPeriodMonths)
+                    }
                 }
             }
         }

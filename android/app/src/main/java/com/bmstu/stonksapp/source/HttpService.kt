@@ -13,7 +13,7 @@ class HttpService {
     companion object {
         private const val STONKS_BASE_URL = "http://84.201.141.130:9990/"
         private const val TINKOFF_BASE_URL = "https://api-invest.tinkoff.ru/openapi/sandbox/"
-        private const val TIMEOUT_SECONDS = 10L
+        private const val TIMEOUT_SECONDS = 12L
 
         fun getTinkoffApi(token: String): TinkoffHttpApi =
             getRetrofit(tinkoffService = true, token = token).create(TinkoffHttpApi::class.java)

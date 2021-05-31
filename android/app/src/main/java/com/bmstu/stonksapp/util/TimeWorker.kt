@@ -6,7 +6,8 @@ import java.util.*
 private const val DEFAULT_TIME_ZONE = "+03:00"
 const val DEFAULT_TIME_ZONE_GMT = "GMT+3"
 private val PREDICTION_PERIOD_MONTHS = arrayOf(1, 3, 6)
-const val MONTH_LEN = 30
+const val WORK_MONTH_LEN = 21
+const val WORK_WEEK_LEN = 5
 //2021-02-19T12:00+03:00
 fun calendarToISO8601(calendar: Calendar): String {
     val year = calendar[Calendar.YEAR]

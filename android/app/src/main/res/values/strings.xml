@@ -33,4 +33,8 @@
     <string name="prediction_for_date">Прогноз на %s</string>
     <string name="price_for_date">Цена на %s</string>
     <string name="delete">Удалить</string>
+    <string name="day_ago">День назад:</string>
+    <string name="week_ago">Неделю назад:</string>
+    <string name="month_ago">Месяц назад:</string>
+    <string name="year_ago">Год назад:</string>
 </resources>

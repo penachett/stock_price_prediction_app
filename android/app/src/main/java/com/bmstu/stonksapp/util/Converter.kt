@@ -19,6 +19,10 @@ fun monthStringByCount(month: Int): String {
     }
 }
 
+fun formPriceString(price: Double, currency: String): String {
+    return String.format("%.2f", price) + " ${currencySymbolByName(currency)}"
+}
+
 fun formPriceChangeString(startPrice: Double, endPrice: Double, currency: String): String {
     val priceStr = String.format("%.2f", endPrice) + " ${currencySymbolByName(currency)}"
     val diffSign = if (endPrice < startPrice) "-" else "+"

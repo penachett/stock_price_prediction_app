@@ -91,8 +91,7 @@ class PredictionInfoFragment : Fragment() {
             val startPrice = prediction.prediction.startPrice
             val predictedPrice = prediction.prediction.predictedPrice
             val lastPrice = prediction.info.orderBook.lastPrice
-            val curPriceStr = String.format("%.2f", startPrice) + " ${currencySymbolByName(prediction.info.info.currency)}"
-            startTv.text = curPriceStr
+            startTv.text = formPriceString(startPrice, prediction.info.info.currency)
             predictedInfoTv.text = resources.getString(
                     R.string.prediction_for_date, timestampToDateString(prediction.prediction.predictTime))
             startInfoTv.text = resources.getString(
