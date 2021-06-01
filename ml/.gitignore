@@ -1,4 +1,5 @@
-data
+/data/*
+!/data/AAPL_5Y.csv
 input.txt
 output.txt
 /.ipynb_checkpoints
