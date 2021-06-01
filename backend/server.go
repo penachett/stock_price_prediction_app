@@ -3,6 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+)
+
+const (
+	port = 9990
 )
 
 func main() {
@@ -16,8 +21,8 @@ func main() {
 	if err := initDB(); err != nil {
 		panic(err)
 	}
-	fmt.Println("starting server")
-	err := http.ListenAndServe(":9990", nil)
+	fmt.Println("starting server on " + strconv.Itoa(port) + " port")
+	err := http.ListenAndServe(":" + strconv.Itoa(port), nil)
 	if err != nil {
 		panic(err)
 	}

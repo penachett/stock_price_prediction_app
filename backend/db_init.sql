@@ -1,8 +1,6 @@
 create database stonks;
+\c stonks;
 create user penachett with encrypted password 'stonksapp908365';
-grant all privileges on all tables in schema public to penachett;
-grant all privileges on all sequences in schema public to penachett;
-grant all privileges on all functions in schema public to penachett;
 create table users (
     id serial primary key,
     login text not null,
@@ -18,3 +16,7 @@ create table predictions (
     predicted_price double precision not null,
     start_price double precision not null,
     user_id bigint references users (id));
+
+grant all privileges on all tables in schema public to penachett;
+grant all privileges on all sequences in schema public to penachett;
+grant all privileges on all functions in schema public to penachett;
