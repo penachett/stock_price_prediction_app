@@ -112,6 +112,7 @@
                             android:textAlignment="viewStart"
                             android:textColor="@color/main_black"
                             android:fontFamily="@font/mplus_rounded_regular"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/current_price_tv"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -126,6 +127,7 @@
                             android:textAlignment="viewStart"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/predicted_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/start_price_with_date_tv"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -140,6 +142,7 @@
                             android:textColor="@color/main_black"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/current_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/predicted_price_with_date_tv"
                             app:layout_constraintStart_toStartOf="parent"/>

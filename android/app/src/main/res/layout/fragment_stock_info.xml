@@ -114,6 +114,7 @@
                             android:textAlignment="viewStart"
                             android:textColor="@color/main_black"
                             android:text="@string/current_price"
+                            android:layout_marginEnd="10dp"
                             android:fontFamily="@font/mplus_rounded_regular"
                             app:layout_constraintEnd_toStartOf="@id/current_price_tv"
                             app:layout_constraintTop_toTopOf="parent"
@@ -129,6 +130,7 @@
                             android:textAlignment="viewStart"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/day_ago_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/current_price_const_tv"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -143,6 +145,7 @@
                             android:textAlignment="viewStart"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/week_ago_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/day_ago_price_const_tv"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -157,6 +160,7 @@
                             android:textColor="@color/main_black"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/month_ago_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/week_ago_price_const_tv"
                             app:layout_constraintStart_toStartOf="parent"/>
@@ -171,6 +175,7 @@
                             android:textColor="@color/main_black"
                             android:fontFamily="@font/mplus_rounded_regular"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="10dp"
                             app:layout_constraintEnd_toStartOf="@id/year_ago_price_tv"
                             app:layout_constraintTop_toBottomOf="@id/month_ago_price_const_tv"
                             app:layout_constraintStart_toStartOf="parent"/>

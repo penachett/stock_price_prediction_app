@@ -39,7 +39,7 @@ class HttpHandler {
 
         private fun parseErrorBody(throwable: HttpException): String? {
             val errBody = throwable.response()?.errorBody()?.string()
-            Log.i(TAG, "" + errBody)
+            Log.e(TAG, "errBody: $errBody")
             return try {
                 errBody?.let {
                     Gson().fromJson(it, ErrorResponse::class.java).payload.message
